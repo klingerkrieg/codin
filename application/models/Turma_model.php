@@ -6,8 +6,11 @@ class Turma_model extends CI_Model {
 
         public function inserir($data){
                 //$this->output->enable_profiler(TRUE);
+
+                $chave = substr(md5(uniqid(mt_rand(), true)) , 0, 8);
+
                 $data['data_criado'] = Date('Y/m/d H:i:s');
-                $data['chave'] = substr(md5(uniqid(mt_rand(), true)) , 0, 8);
+                $data['chave'] = $chave;
                 $turma = $this->db->insert($this->table,$data);
                 $turma_id = $this->db->insert_id();
                 
@@ -17,26 +20,26 @@ class Turma_model extends CI_Model {
                 $data['idturma'] = $turma_id;
                 $turma = $this->db->insert("professor_turma",$data);
                 
-                return true;
+                return $chave;
 
         }
 
-        public function get($data){
-                $this->output->enable_profiler(TRUE);
+        public function getByChave($chave){
+                //$this->output->enable_profiler(TRUE);
                 $this->db->select('idturma, nome');
-                return $this->db->get_where($this->table,$data);
+                return $this->db->get_where($this->table,['chave'=>$chave])->row_array();
         }
 
         public function all(){
                 
-                $sql = 'select turmas.idturma, turmas.nome,'
+                $sql = 'select turmas.idturma, turmas.nome, turmas.chave, '
                         ." (select count(*) from aluno_turma where aluno_turma.idturma = turmas.idturma ) as qtd_alunos "
                         ." from turmas inner join "
                         ." professor_turma on "
                         ." professor_turma.idturma = turmas.idturma and "
                         ." professor_turma.idusuario = ". $_SESSION['idusuario'];
 
-                return $this->db->query($sql)->result_array();;
+                return $this->db->query($sql)->result_array();
         }
         
 

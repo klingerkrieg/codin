@@ -10,14 +10,19 @@ class Turmas extends CI_Controller {
 		}
 	}
 
+	public function index($chave){
+		$this->load->model('Turma_model');
+		$turma = $this->Turma_model->getByChave($chave);
+		
+		$this->twig->display('turma', ['turma'=>$turma]);
+
+	}
+
 	public function salvar() {
 
         $this->load->model('Turma_model');
-		$this->Turma_model->inserir(only($_POST,['nome']));
-
-		$turmas = $this->queryTurmas();
-
-		$this->twig->display('turmas', ['turmas'=>$turmas]);
+		$chave = $this->Turma_model->inserir(only($_POST,['nome']));
+		print $chave;
 	}
 
 	public function queryTurmas(){
