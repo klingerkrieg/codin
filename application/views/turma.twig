@@ -7,18 +7,18 @@
 
 {% endblock %}
 
+{% block menu_lateral %}
+<a class="waves-effect waves-light mdl-navigation__link modal-trigger" href="#cadTarefa"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">local_offer</i>Nova tarefa</a>
+{% endblock %}
 
 {% block content %}
 
 {% include 'cadTarefa.html' %}
-
-
 <main class="mdl-layout__content mdl-color--grey-100">
-    <div class="mdl-grid demo-content">
+    <div class="mdl-grid demo-content" id="tarefas">
         
-        
+        {% include 'tarefas.twig' %}
         
     </div>
 </main>
-
 {% endblock %}

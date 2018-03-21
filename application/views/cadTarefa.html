@@ -1,58 +1,70 @@
- <!-- Modal Trigger -->
- 
-  <!-- Modal Structure -->
-  <div id="cadTarefa" class="modal">
-    <div class="modal-content">
-      <h4>Nova tarefa</h4>
-      <form id='cadTarefaForm' accept-charset="UTF-8" enctype="multipart/form-data">
+
+<!-- Modal Structure -->
+<div id="cadTarefa" class="modal modal-fixed-footer">
+  <div class="modal-content">
+    <h4>Nova tarefa</h4>
+    <form id='cadTarefaForm' accept-charset="UTF-8" enctype="multipart/form-data">
+    
       
-        
       <input type="hidden" name="idturma" id="idturma" value="{{turma.idturma}}" >
-      
+      <input type="hidden" name="idtarefa" id="idtarefa" value="" >
+    
 
+    <div class="row">
+      <div class="col s12">
       <div class="row">
-        <div class="col s12">
-        <div class="row">
-            <div class="input-field col s12">
-            <input id="titulo" name="titulo" type="text" class="validate">
-            <label for="titulo">Título</label>
-            </div>
-        </div>
-
-        <div class="row">
-          <div class="input-field col s6">
-          <input id="data" name="data" type="text" class="datepicker validate">
-          <label for="data">Data</label>
-          </div>
-
-          <div class="input-field col s6">
-            <input id="hora" name="hora" type="text" class="timepicker validate">
-            <label for="hora">Hora</label>
+          <div class="input-field col s12">
+          <input id="titulo" name="titulo" type="text" class="validate">
+          <label for="titulo">Título</label>
           </div>
       </div>
+
+      <div class="row">
+        <div class="input-field col s6">
+        <input id="data" name="data" type="text" class="datepicker validate">
+        <label for="data">Data</label>
+        </div>
+
+        <div class="input-field col s6">
+          <input id="hora" name="hora" type="text" class="timepicker validate">
+          <label for="hora">Hora</label>
+        </div>
+    </div>
+
+    <div class="row">
+      <div class="input-field col s12">
+        <input name="arquivo" type="file" />
+      </div>
+    </div>
+    
 
       <div class="row">
         <div class="input-field col s12">
-          <input name="arquivo" type="file" />
+          <textarea id="texto" name="texto" class="materialize-textarea" data-length="8000"></textarea>
+          <label for="texto">Textarea</label>
         </div>
       </div>
-      
 
-        <div class="row">
-          <div class="input-field col s12">
-            <textarea id="texto" name="texto" class="materialize-textarea" data-length="8000"></textarea>
-            <label for="texto">Textarea</label>
-          </div>
-        </div>
+      </div>   
+  </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" onclick="salvarTarefa()" class='indigo lighten-1 btn waves-effect waves-green'>Salvar</button>
+  <a href="#!" class="modal-action modal-close indigo lighten-1 btn waves-effect waves-green">Cancelar</a>
+</div>
+</div>
 
-        <div class="row">
-          <div class="input-field col s12">
-              <button type="button" onclick="salvarTarefa()" class='indigo lighten-1 btn-large'>Salvar</button>
-              <a href="#!" class='modal-action modal-close indigo lighten-1 btn-large'>Cancelar</a>
-          </div>
-        </div>
-        </div>   
+
+
+
+<!-- Modal Structure -->
+<div id="confirmDeleteTarefa" class="modal">
+  <div class="modal-content">
+    <h4>Deseja excluir essa tarefa?</h4>
+  </div>
+  <div class="modal-footer">
+      <button type="button" onclick="excluirTarefa()" class='indigo lighten-1 btn waves-effect waves-green'>Sim</button>
+      <a href="#!" class="modal-action modal-close indigo lighten-1 btn waves-effect waves-green">Não</a>
     </div>
-    </form>
-  </div>
-  </div>
+</div>

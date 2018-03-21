@@ -16,10 +16,7 @@ class Home extends CI_Controller {
 
 
 		if ($_SESSION['is_professor'] == true){
-			$dados = array(
-				'texto' => 'Esse é um Template Twig'
-			);
-			$this->twig->display('home_professor', $dados);
+			$this->twig->display('home_professor');
 		} else {
 
 		}

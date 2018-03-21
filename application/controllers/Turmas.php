@@ -13,6 +13,11 @@ class Turmas extends CI_Controller {
 	public function index($chave){
 		$this->load->model('Turma_model');
 		$turma = $this->Turma_model->getByChave($chave);
+
+		$this->load->model('Tarefa_model');
+		$tarefas =  $this->Tarefa_model->getTarefasByTurma($turma['idturma']);
+
+
 		
 		$this->twig->display('turma', ['turma'=>$turma]);
 

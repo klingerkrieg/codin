@@ -1,3 +1,4 @@
+var tarefaSelected;
 
 $.extend($.fn.pickadate.defaults, {
     monthsFull: [ 'Janeiro', 'Fevereiro', 'Marco', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro' , 'Dezembro' ],
@@ -15,6 +16,7 @@ $.extend($.fn.pickadate.defaults, {
     $('.modal').modal();
 
     listarTurmas();
+    listarTarefas();
 
     $('.datepicker').pickadate({
         selectMonths: true, // Creates a dropdown to control month
@@ -74,14 +76,50 @@ function salvarTarefa(){
     $.ajax({
         method: "POST",
         url: base_url + "/tarefas/salvar",
-        //data: $('#cadTarefaForm, #idturma').serialize()
         data: new FormData($('#cadTarefaForm')[0]),
         contentType: false,
         processData: false
     }).done(function(resp) {
-        alert(resp);
+        listarTarefas();
     });
 
     
   $('#cadTarefa').modal('close');
+}
+
+
+function selectTarefa(id){
+    tarefaSelected = id;
+}
+
+function excluirTarefa(){
+    $.ajax({
+        method: "POST",
+        url: base_url + "/tarefas/excluir/"+tarefaSelected
+    }).done(function(resp) {
+        listarTarefas();
+    });
+}
+
+function listarTarefas(){
+    $.ajax({
+        method: "GET",
+        url: base_url + "/tarefas/listar/"+$('#idturma').val()
+    }).done(function(resp) {
+        $('#tarefas').html(resp);
+        $('#confirmDeleteTarefa').modal('close');
+    });
+}
+
+function editarTarefa(id){
+    $.ajax({
+        method: "GET",
+        url: base_url + "/tarefas/get/"+id,
+        dataType: 'json'
+    }).done(function(resp) {
+        $('#cadTarefa input,#cadTarefa textarea').each(function(k,el){
+            $(el).val(resp[el.id]);
+        });
+        Materialize.updateTextFields();
+    });
 }

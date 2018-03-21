@@ -15,5 +15,16 @@ class Arquivo_model extends CI_Model {
 
         }
 
+        public function getArquivosByTarefa($idtarefa, $doProfessor = true){
+                //trazer tambem se o aluno já entregou essa tarefa
+                $this->db->select('caminho, idprofessor ');
+                return $this->db->get_where($this->table,['idtarefa'=>$idtarefa,
+                                                          'do_professor'=>$doProfessor])->result_array();;
+        }
+
+        public function excluirByTarefa($idtarefa){
+                return $this->db->delete($this->table, ["idtarefa"=>$idtarefa]);
+        }
+
 
 }

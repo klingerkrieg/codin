@@ -39,6 +39,44 @@ if(!function_exists('date_br_to_mysql')){
   }
 }
 
+if(!function_exists('date_mysql_to_br')){
+  function date_mysql_to_br($date) {
+    $dt = explode("-",$date);
+    return "{$dt[2]}/{$dt[1]}/{$dt[0]}";
+
+  }
+}
+
+if(!function_exists('getEnds')){
+  function getEnds($str,$token) {
+    return substr($str,strrpos($str,$token)+1);
+  }
+}
+
+if(!function_exists('deleteFolder')){
+  function deleteFolder($path){
+    $s = opendir($path);
+    while ($f = readdir($s)){
+
+      if ($f == "." || $f == ".."){
+        continue;
+      }
+      
+      if (is_file($path."/".$f)){
+        unlink($path."/".$f);
+      } else {
+        //deleta subpastas
+        deleteFolder($path."/".$f);
+        
+        rmdir($path."/".$f);
+      }
+    }
+
+    rmdir($path);
+    
+  }
+}
+
 
 if(!function_exists('saveFile')){
   function saveUploadFile($folder){

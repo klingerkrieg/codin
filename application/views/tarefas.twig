@@ -1,0 +1,32 @@
+{% for tarefa in tarefas %}
+    
+<div class="demo-cards mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-grid mdl-grid--no-spacing">
+<div class="demo-updates mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
+    <div class="mdl-card__title mdl-card--expand mdl-color--teal-300">
+    
+        <span class="mdl-cell mdl-cell--9-col">{{ tarefa.titulo|e }}</span>
+        <span class="mdl-cell mdl-cell--3-col">Concluídos {{tarefa.qtd_concluidos}}/{{tarefa.qtd_alunos}}</span>
+    
+    </div>
+    <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+    {{tarefa.texto|e}}
+        <div>
+        {% for arq in tarefa.arquivos %}
+            <a target="_BLANK" href="{{base_url()}}{{arq.caminho}}" class="mdl-button mdl-js-button mdl-js-ripple-effect">
+               <img src="{{base_url('assets/imgs/')}}{{arq.ext}}.png"> {{arq.nome}}
+            </a>
+        {% endfor %}
+        </div>
+    </div>
+    <div class="mdl-card__actions mdl-card--border">
+        <a href="" class="mdl-button mdl-js-button mdl-js-ripple-effect">Abrir</a>
+        <a href="#cadTarefa"            onclick="editarTarefa({{tarefa.idtarefa}});" class="mdl-button mdl-js-button mdl-js-ripple-effect modal-trigger">Editar</a>
+        <a href="#confirmDeleteTarefa"  onclick="selectTarefa({{tarefa.idtarefa}})" class="mdl-button mdl-js-button mdl-js-ripple-effect modal-trigger">Excluir</a>
+    </div>
+</div>
+
+<div class="demo-separator mdl-cell--1-col"></div>
+
+</div>
+
+{% endfor %}
