@@ -1,0 +1,56 @@
+{% extends "template/login.html" %}
+
+{% block content %}
+
+<form action="{{base_url('login/salvar')}}" method="post" accept-charset="UTF-8">
+    
+    
+  <div class="row">
+    <form class="col s12">
+
+    <div class="row">
+        <div class="input-field col s12">
+        <input id="nome" name="nome" type="text" class="validate">
+        <label for="nome">Nome</label>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="input-field col s12">
+        <input id="email" name="email" type="email" class="validate">
+        <label for="email">Email</label>
+        </div>
+    </div>
+
+    <div class="row">
+    
+    <div class="input-field col s12">
+        <input id="senha" name="senha" type="password" class="validate">
+        <label for="senha">Senha</label>
+    </div>
+
+    <div class="input-field col s12">
+        <input id="resenha" name="resenha" type="password" class="validate">
+        <label for="resenha">Confirme a senha</label>
+    </div>
+
+    </div>
+
+    <div class="row">
+        <div class="input-field col s12">
+            <button class='indigo lighten-1 btn-large'>Salvar</button>
+        </div>
+    </div>
+        
+    </form>
+  </div>
+        
+
+    {% if errorMessage is defined %}
+        <p>{{ errorMessage }}</p>
+    {% endif %}
+</form>
+
+
+{% endblock %}
