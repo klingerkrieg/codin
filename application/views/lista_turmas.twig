@@ -7,6 +7,8 @@
     </div>
     <div class="mdl-card__actions mdl-card--border">
     <a href="{{base_url('turmas/index/')}}{{ turma.chave }}" class="mdl-button mdl-js-button mdl-js-ripple-effect">Entrar</a>
+    <a href="#cadTurma"            onclick="editarTurma({{turma.idturma}});"    class="mdl-button mdl-js-button mdl-js-ripple-effect modal-trigger">Editar</a>
+    <a href="#confirmDeleteTurma"  onclick="selectTurma({{turma.idturma}})"     class="mdl-button mdl-js-button mdl-js-ripple-effect modal-trigger">Excluir</a>
     </div>
 </div>
 

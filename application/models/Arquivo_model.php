@@ -15,14 +15,16 @@ class Arquivo_model extends CI_Model {
 
         }
 
-        public function getArquivosByTarefa($idtarefa, $doProfessor = true){
+        public function getByTarefa($idtarefa, $doProfessor = true){
                 //trazer tambem se o aluno já entregou essa tarefa
-                $this->db->select('caminho, idprofessor ');
+                $this->db->select('caminho, idusuario ');
                 return $this->db->get_where($this->table,['idtarefa'=>$idtarefa,
                                                           'do_professor'=>$doProfessor])->result_array();;
         }
 
         public function excluirByTarefa($idtarefa){
+                
+		deleteFolder('./uploads/'.$idtarefa);
                 return $this->db->delete($this->table, ["idtarefa"=>$idtarefa]);
         }
 

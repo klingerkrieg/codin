@@ -14,10 +14,8 @@ class Turmas extends CI_Controller {
 		$this->load->model('Turma_model');
 		$turma = $this->Turma_model->getByChave($chave);
 
-		$this->load->model('Tarefa_model');
-		$tarefas =  $this->Tarefa_model->getTarefasByTurma($turma['idturma']);
-
-
+		#$this->load->model('Tarefa_model');
+		#$tarefas =  $this->Tarefa_model->getByTurma($turma['idturma']);
 		
 		$this->twig->display('turma', ['turma'=>$turma]);
 
@@ -26,17 +24,38 @@ class Turmas extends CI_Controller {
 	public function salvar() {
 
         $this->load->model('Turma_model');
-		$chave = $this->Turma_model->inserir(only($_POST,['nome']));
+		$chave = $this->Turma_model->salvar(only($_POST,['idturma','nome']));
 		print $chave;
 	}
 
-	public function queryTurmas(){
-		$this->load->model('Turma_model');
-		return $this->Turma_model->all();
-	}
 
 	public function listar(){
-		$turmas = $this->queryTurmas();
-		$this->twig->display('turmas', ['turmas'=>$turmas]);
+		$this->load->model('Turma_model');
+		$turmas = $this->Turma_model->allFromProfessor();
+		$this->twig->display('lista_turmas', ['turmas'=>$turmas]);
+	}
+
+	public function get($idturma){
+		$this->load->model('Turma_model');
+		$turma =  $this->Turma_model->get($idturma);
+
+		print json_encode($turma);
+	}
+
+	public function excluir($idturma){
+
+		$this->load->model('Tarefa_model');
+		$this->load->model('Turma_model');
+		
+		$tarefas = $this->Tarefa_model->getByTurma($idturma);
+		
+		//exclui todas as tarefas
+		foreach($tarefas as $tarefa){
+			$this->Tarefa_model->excluir($tarefa['idtarefa']);
+		}
+		
+		$this->Turma_model->excluir($idturma);
+		
+		
 	}
 }

@@ -41,7 +41,25 @@ class Tarefa_model extends CI_Model {
                 return $arr;
         }
 
-        public function getTarefasByTurma($idturma){
+        public function getArquivoData($idtarefa){
+                $arquivos = $this->Arquivo_model->getByTarefa($idtarefa);
+
+                for ($y = 0; $y < sizeof($arquivos); $y++){
+                        $arquivos[$y]['nome'] = getEnds($arquivos[$y]['caminho'],"/");
+                        $arquivos[$y]['ext'] = getEnds($arquivos[$y]['caminho'],".");
+                }
+                return $arquivos;
+        }
+
+        public function getArquivos($tarefas){
+                $this->load->model('Arquivo_model');
+                for($i = 0; $i < sizeof($tarefas); $i++ ){
+                        $tarefas[$i]['arquivos'] = $this->getArquivoData($tarefas[$i]['idtarefa']);
+                }
+                return $tarefas;
+        }
+
+        public function getByTurmaProfessor($idturma){
                 //trazer tambem se o aluno já entregou essa tarefa
                 $sql = "select idtarefa, titulo, texto, entrega, idprofessor, idturma, "
                         ." (select count(*) from aluno_turma where idturma = tarefas.idturma) as qtd_alunos, "
@@ -49,10 +67,28 @@ class Tarefa_model extends CI_Model {
                         ." from tarefas "
                         ."  where idturma = $idturma ";
 
-                return $this->db->query($sql)->result_array();
+                $tarefas = $this->db->query($sql)->result_array();
+                return $this->getArquivos($tarefas);
+        }
+
+        public function getByTurmaAluno($idturma){
+                $sql = "select idtarefa, titulo, texto, entrega, idprofessor, idturma, "
+                        ." (select distinct count(idusuario) from arquivos "
+                                ." where idtarefa = tarefas.idtarefa and "
+                                ." do_professor = 0 and arquivos.idusuario = {$_SESSION['idusuario']} ) as concluido "
+                        ." from tarefas "
+                        ." where idturma = $idturma ";
+
+                $tarefas = $this->db->query($sql)->result_array();
+                return $this->getArquivos($tarefas);
         }
 
         public function excluir($idtarefa){
+
+                $this->load->model('Arquivo_model');
+		$this->Arquivo_model->excluirByTarefa($idtarefa);
+
+
                 return $this->db->delete($this->table, ["idtarefa"=>$idtarefa]);
         }
 

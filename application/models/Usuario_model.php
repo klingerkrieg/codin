@@ -12,7 +12,7 @@ class Usuario_model extends CI_Model {
         }
 
         public function get($data){
-                $this->output->enable_profiler(TRUE);
+                #this->output->enable_profiler(TRUE);
                 $data['senha'] = sha1($data['senha']);
                 $this->db->select('idusuario, nome, email, is_professor');
                 return $this->db->get_where($this->table,$data);

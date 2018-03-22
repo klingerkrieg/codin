@@ -14,11 +14,10 @@ class Home extends CI_Controller {
 
 	public function index() {
 
-
 		if ($_SESSION['is_professor'] == true){
 			$this->twig->display('home_professor');
 		} else {
-
+			$this->twig->display('home_aluno');
 		}
 		
 	}

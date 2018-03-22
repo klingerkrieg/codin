@@ -1,4 +1,5 @@
 var tarefaSelected;
+var turmaSelected;
 
 $.extend($.fn.pickadate.defaults, {
     monthsFull: [ 'Janeiro', 'Fevereiro', 'Marco', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro' , 'Dezembro' ],
@@ -64,12 +65,41 @@ function salvarTurma(){
         url: base_url + "/turmas/salvar",
         data: $('#carTurmaForm').serialize()
     }).done(function(resp) {
-        $('#turmas').html(resp);
+        listarTurmas();
     });
 
     
   $('#cadTurma').modal('close');
   
+}
+
+
+function editarTurma(id){
+    $.ajax({
+        method: "GET",
+        url: base_url + "/turmas/get/"+id,
+        dataType: 'json'
+    }).done(function(resp) {
+        $('#cadTurma input').each(function(k,el){
+            $(el).val(resp[el.id]);
+        });
+        Materialize.updateTextFields();
+    });
+}
+
+
+function selectTurma(id){
+    turmaSelected = id;
+}
+
+function excluirTurma(){
+    $.ajax({
+        method: "POST",
+        url: base_url + "/turmas/excluir/"+turmaSelected
+    }).done(function(resp) {
+        listarTurmas();
+        $('#confirmDeleteTurma').modal('close');
+    });
 }
 
 function salvarTarefa(){

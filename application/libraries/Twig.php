@@ -64,6 +64,7 @@ class Twig
 					array_merge($this->functions_safe, $params['functions_safe'])
 				);
 		}
+
 	}
 
 	protected function resetTwig()
@@ -106,6 +107,10 @@ class Twig
 		}
 
 		$this->twig = $twig;
+
+
+
+		$this->twig->addGlobal("session", $_SESSION);
 	}
 
 	protected function setLoader($loader)

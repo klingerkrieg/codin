@@ -1,39 +1,35 @@
- <!-- Modal Trigger -->
- 
+
   <!-- Modal Structure -->
-  <div id="cadTurma" class="modal">
+<div id="entrarEmTurma" class="modal">
     <div class="modal-content">
-      <h4>Nova turma</h4>
+      <h4>Entrar na turma</h4>
       <form id='carTurmaForm' accept-charset="UTF-8">
-        
-        <input type="hidden" id="idturma" name="idturma">
         
       <div class="row">
         <div class="col s12">
         <div class="row">
             <div class="input-field col s12">
-            <input id="nome" name="nome" type="text" class="validate">
-            <label for="nome">Nome da turma</label>
+            <input id="chave" name="chave" type="text" class="validate">
+            <label for="chave">Chave da turma</label>
             </div>
         </div>
-
         </div>   
     </div>
     </form>
   </div>
   <div class="modal-footer">
-    <button type="button" onclick="salvarTurma()" class='indigo lighten-1 btn waves-effect waves-green'>Salvar</button>
+    <button type="button" onclick="entrarTurma()" class='indigo lighten-1 btn waves-effect waves-green'>Entrar</button>
     <a href="#!" class="modal-action modal-close indigo lighten-1 btn waves-effect waves-green">Cancelar</a>
   </div>
-  </div>
+</div>
 
   <!-- Modal Structure -->
-<div id="confirmDeleteTurma" class="modal">
+<div id="confirmSairTurma" class="modal">
   <div class="modal-content">
-    <h4>Deseja excluir essa turma?</h4>
+    <h4>Deseja sair dessa turma?</h4>
   </div>
   <div class="modal-footer">
-      <button type="button" onclick="excluirTurma()" class='indigo lighten-1 btn waves-effect waves-green'>Sim</button>
+      <button type="button" onclick="sairTurma()" class='indigo lighten-1 btn waves-effect waves-green'>Sim</button>
       <a href="#!" class="modal-action modal-close indigo lighten-1 btn waves-effect waves-green">Não</a>
   </div>
 </div>

@@ -39,40 +39,18 @@ class Tarefas extends CI_Controller {
 	}
 
 
-	private function getArquivoData($idtarefa){
-		$arquivos = $this->Arquivo_model->getArquivosByTarefa($idtarefa);
-
-		for ($y = 0; $y < sizeof($arquivos); $y++){
-			$arquivos[$y]['nome'] = getEnds($arquivos[$y]['caminho'],"/");
-			$arquivos[$y]['ext'] = getEnds($arquivos[$y]['caminho'],".");
-		}
-		return $arquivos;
-	}
-
 	public function listar($idturma){
 
-		
 		$this->load->model('Tarefa_model');
-		$tarefas =  $this->Tarefa_model->getTarefasByTurma($idturma);
+		$tarefas =  $this->Tarefa_model->getByTurmaProfessor($idturma);
 
-
-		$this->load->model('Arquivo_model');
-		for($i = 0; $i < sizeof($tarefas); $i++ ){
-			$tarefas[$i]['arquivos'] = $this->getArquivoData($tarefas[$i]['idtarefa']);
-		}
-		
-		$this->twig->display('tarefas', ['tarefas'=>$tarefas]);
+		$this->twig->display('lista_tarefas', ['tarefas'=>$tarefas]);
 	}
 
 	public function excluir($idtarefa){
 
-		$this->load->model('Arquivo_model');
-		$this->Arquivo_model->excluirByTarefa($idtarefa);
-
 		$this->load->model('Tarefa_model');
 		$this->Tarefa_model->excluir($idtarefa);
 
-		deleteFolder('./uploads/'.$idtarefa);
-		
 	}
 }
