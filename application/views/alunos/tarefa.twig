@@ -1,0 +1,70 @@
+{% extends "template/dashboard.html" %}
+
+
+{% block title %}
+
+{{turma.nome|e}} >> {{tarefa.titulo|e}}
+
+{% endblock %}
+
+{% block menu_lateral %}
+
+{% endblock %}
+
+{% block content %}
+
+<input type="hidden" id="idturma" value="{{turma.idturma}}">
+
+<main class="mdl-layout__content mdl-color--grey-100">
+    <div class="mdl-grid demo-content">
+        <div class="demo-charts mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
+        
+        
+        <form id='respostaForm' method="POST" action="{{base_url('alunoturma/responderTarefa/' ~ tarefa.idtarefa)}}" accept-charset="UTF-8" enctype="multipart/form-data">
+
+            <div class="row">
+                <div class="col s12">
+                    {{tarefa.texto|e}}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s12">
+                {% for arq in arquivos %}
+                <a target="_BLANK" href="{{base_url()}}{{arq.caminho}}" class="mdl-button mdl-js-button mdl-js-ripple-effect">
+                <img src="{{base_url('assets/imgs/')}}{{arq.ext}}.png"> {{arq.nome}}
+                </a>
+                {% endfor %}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s12">
+                    Responda essa tarefa
+                    <input name="arquivo" type="file" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s12">
+                {% for resp in respostas %}
+                <a target="_BLANK" href="{{base_url()}}{{resp.caminho}}" class="mdl-button mdl-js-button mdl-js-ripple-effect">
+                <img src="{{base_url('assets/imgs/')}}{{resp.ext}}.png"> {{resp.nome}}
+                </a>
+                {% endfor %}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s12">
+                    <button type="submit" class='indigo lighten-1 btn waves-effect waves-green'>Enviar</button>
+                </div>
+            </div>
+        </form>
+
+        </div>
+    </div>
+</main>
+
+
+{% endblock %}

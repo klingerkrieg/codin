@@ -17,7 +17,7 @@ class Turmas extends CI_Controller {
 		#$this->load->model('Tarefa_model');
 		#$tarefas =  $this->Tarefa_model->getByTurma($turma['idturma']);
 		
-		$this->twig->display('turma', ['turma'=>$turma]);
+		$this->twig->display('professores/turma', ['turma'=>$turma]);
 
 	}
 
@@ -32,7 +32,7 @@ class Turmas extends CI_Controller {
 	public function listar(){
 		$this->load->model('Turma_model');
 		$turmas = $this->Turma_model->allFromProfessor();
-		$this->twig->display('lista_turmas', ['turmas'=>$turmas]);
+		$this->twig->display('professores/lista_turmas', ['turmas'=>$turmas]);
 	}
 
 	public function get($idturma){

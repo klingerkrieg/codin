@@ -16,8 +16,10 @@ $.extend($.fn.pickadate.defaults, {
   $(document).ready(function(){
     $('.modal').modal();
 
-    listarTurmas();
-    listarTarefas();
+    if ($('#turmas').length > 0)
+        listarTurmas();
+    if ($('#tarefas').length > 0)
+        listarTarefas();
 
     $('.datepicker').pickadate({
         selectMonths: true, // Creates a dropdown to control month
@@ -110,7 +112,11 @@ function salvarTarefa(){
         contentType: false,
         processData: false
     }).done(function(resp) {
-        listarTarefas();
+        if ($('#tarefas').length > 0){
+            listarTarefas();
+        } else {
+            window.location.reload();
+        }
     });
 
     
@@ -127,7 +133,11 @@ function excluirTarefa(){
         method: "POST",
         url: base_url + "/tarefas/excluir/"+tarefaSelected
     }).done(function(resp) {
-        listarTarefas();
+        if ($('#tarefas').length > 0){
+            listarTarefas();
+        } else {
+            window.location.reload();
+        }
     });
 }
 

@@ -8,7 +8,8 @@
     <h2 class="mdl-card__title-text">{{ turma.nome|e }} {{ turma.qtd_alunos }}</h2>
     </div>
     <div class="mdl-card__actions mdl-card--border">
-    <a href="{{base_url('alunoturma/index/')}}{{ turma.chave }}" class="mdl-button mdl-js-button mdl-js-ripple-effect">Entrar</a>
+        <a href="{{base_url('alunoturma/index/' ~ turma.chave)}}" class="mdl-button mdl-js-button mdl-js-ripple-effect">Entrar</a>
+        <a href="#confirmSairTurma" onclick="selectTurma({{turma.idturma}})" class="mdl-button mdl-js-button mdl-js-ripple-effect modal-trigger">Sair</a>
     </div>
 </div>
 

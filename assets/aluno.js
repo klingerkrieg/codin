@@ -1,4 +1,4 @@
-
+var turmaSelected;
 
 $(function(){
     if ($('#turmas').length > 0)
@@ -6,6 +6,8 @@ $(function(){
 
     if ($('#tarefas').length > 0)
         listarTarefas();
+
+    $('.modal').modal();
 });
 
 function entrarTurma(){
@@ -33,5 +35,18 @@ function listarTarefas(){
         url: base_url + "/AlunoTurma/listarTarefas/" + $('#idturma').val()
     }).done(function(resp) {
         $('#tarefas').html(resp);
+    });
+}
+
+function selectTurma(id){
+    turmaSelected = id;
+}
+
+function sairTurma(){
+    $.ajax({
+        method: "POST",
+        url: base_url + "/AlunoTurma/sair/" + $('#chave').val()
+    }).done(function(resp) {
+        listarTurmas();
     });
 }

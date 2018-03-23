@@ -19,7 +19,7 @@
         </div>
     </div>
     <div class="mdl-card__actions mdl-card--border">
-        <a href="" class="mdl-button mdl-js-button mdl-js-ripple-effect">Abrir</a>
+        <a href="{{base_url('tarefas/index/' ~ tarefa.idtarefa)}}" class="mdl-button mdl-js-button mdl-js-ripple-effect">Abrir</a>
         <a href="#cadTarefa"            onclick="editarTarefa({{tarefa.idtarefa}});" class="mdl-button mdl-js-button mdl-js-ripple-effect modal-trigger">Editar</a>
         <a href="#confirmDeleteTarefa"  onclick="selectTarefa({{tarefa.idtarefa}})" class="mdl-button mdl-js-button mdl-js-ripple-effect modal-trigger">Excluir</a>
     </div>

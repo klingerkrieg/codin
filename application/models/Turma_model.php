@@ -24,6 +24,15 @@ class Turma_model extends CI_Model {
                 return $arr;
         }
 
+        public function getAlunos($idturma){
+                $sql = "select usuarios.idusuario, nome, email from usuarios "
+                        ." inner join aluno_turma on "
+                        ." usuarios.idusuario = aluno_turma.idusuario "
+                        ." where aluno_turma.idturma = $idturma";
+
+                return $this->db->query($sql)->result_array();
+        }
+
         public function inserir($data){
                 //$this->output->enable_profiler(TRUE);
 
@@ -86,6 +95,12 @@ class Turma_model extends CI_Model {
                 $this->db->query($sql);
                 return $data['idturma'];
         }
+
+        public function removerAluno($idaluno, $idturma){
+                $data = $this->getByChave($chave);
+                return $this->db->delete("aluno_turma", ["idturma"=>$idturma, "idaluno"=>$idaluno]);
+        }
+        
 
         /*
         

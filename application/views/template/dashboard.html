@@ -48,6 +48,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{{template_url()}}material.css">
     <link rel="stylesheet" href="{{template_url()}}styles.css">
+    <link rel="stylesheet" href="{{base_url('assets/css.css')}}">
 
     <script>
     var base_url = "{{base_url()}}";
@@ -56,8 +57,9 @@
     <script src="{{base_url()}}assets/jquery-3.3.1.min.js"></script>
     <link rel="stylesheet" href="{{base_url()}}assets/materialize/css/materialize.min.css">
     <script src="{{base_url()}}assets/materialize/js/materialize.min.js"></script>
-    <script src="{{base_url()}}assets/professor.js"></script>
-    <script src="{{base_url()}}assets/aluno.js"></script>
+
+    {% block head %}{% endblock %}
+
     <style>
     #view-source {
       position: fixed;

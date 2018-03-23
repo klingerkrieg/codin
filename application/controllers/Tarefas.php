@@ -10,6 +10,24 @@ class Tarefas extends CI_Controller {
 		}
 	}
 
+	public function index($idtarefa){
+		$this->load->model('Tarefa_model');
+		$this->load->model('Turma_model');
+		$this->load->model('Arquivo_model');
+
+		$tarefa 	= $this->Tarefa_model->get($idtarefa);
+		$turma  	= $this->Turma_model->get($tarefa['idturma']);
+		$arquivos  	= $this->Arquivo_model->getByTarefa($tarefa['idtarefa']);
+		$alunos 	= $this->Turma_model->getAlunos($tarefa['idturma']);
+		$alunos 	= $this->Arquivo_model->getByAlunos($tarefa['idtarefa'],$alunos);
+
+
+		$this->twig->display('professores/tarefa', ['turma'=>$turma,
+													'tarefa'=>$tarefa,
+													"alunos"=>$alunos,
+													"arquivos"=>$arquivos]);
+	}
+
 	public function salvar() {
 
 
@@ -21,7 +39,8 @@ class Tarefas extends CI_Controller {
 		$path = saveUploadFile($idtarefa);
 		if ($path != false){
 			$this->load->model('Arquivo_model');
-			$data = ['idtarefa'=>$idtarefa, 'do_professor'=>true,'caminho'=>$path, 'idprofessor'=>$_SESSION['idusuario']];
+			$data = ['idtarefa'=>$idtarefa, 'do_professor'=>true,
+					'caminho'=>$path, 'idusuario'=>$_SESSION['idusuario']];
 			$this->Arquivo_model->inserir($data);
 		}
 
@@ -33,7 +52,7 @@ class Tarefas extends CI_Controller {
 		$tarefa =  $this->Tarefa_model->get($idtarefa);
 
 		$this->load->model('Arquivo_model');
-		$tarefa['arquivos'] = $this->getArquivoData($tarefa['idtarefa']);
+		$tarefa['arquivos'] = $this->Arquivo_model->getByTarefa($tarefa['idtarefa']);
 
 		print json_encode($tarefa);
 	}
@@ -44,7 +63,7 @@ class Tarefas extends CI_Controller {
 		$this->load->model('Tarefa_model');
 		$tarefas =  $this->Tarefa_model->getByTurmaProfessor($idturma);
 
-		$this->twig->display('lista_tarefas', ['tarefas'=>$tarefas]);
+		$this->twig->display('professores/lista_tarefas', ['tarefas'=>$tarefas]);
 	}
 
 	public function excluir($idtarefa){

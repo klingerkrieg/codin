@@ -78,7 +78,7 @@ if(!function_exists('deleteFolder')){
 }
 
 
-if(!function_exists('saveFile')){
+if(!function_exists('saveUploadFile')){
   function saveUploadFile($folder){
     $uploaddir = './uploads/';
     

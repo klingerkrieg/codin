@@ -1,0 +1,11 @@
+
+- Envio de arquivo .zip
+    - descomprimir e implantar
+    - visualização do aluno
+    - visualização do professor
+        - Nota da correção
+        - Texto da correção
+
+- Editar perfil
+
+- Layout no Android

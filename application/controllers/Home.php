@@ -15,9 +15,9 @@ class Home extends CI_Controller {
 	public function index() {
 
 		if ($_SESSION['is_professor'] == true){
-			$this->twig->display('home_professor');
+			$this->twig->display('./professores/home');
 		} else {
-			$this->twig->display('home_aluno');
+			$this->twig->display('./alunos/home');
 		}
 		
 	}

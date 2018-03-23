@@ -22,6 +22,11 @@ class AlunoTurma extends CI_Controller {
 		print $this->Turma_model->inserirAluno($_SESSION['idusuario'],$chave);
 	}
 
+	public function sair($idturma){
+		$this->load->model('Turma_model');
+		print $this->Turma_model->removerAluno($_SESSION['idusuario'],$idturma);
+	}
+
 	public function listar(){
 		$this->load->model('Turma_model');
 		$turmas = $this->Turma_model->allFromAluno();
@@ -32,6 +37,34 @@ class AlunoTurma extends CI_Controller {
 		$this->load->model('Tarefa_model');
 		$tarefas = $this->Tarefa_model->getByTurmaAluno($idturma);
 		$this->twig->display('alunos/lista_tarefas', ['tarefas'=>$tarefas]);
+	}
+
+	public function tarefa($idtarefa){
+		$this->load->model('Tarefa_model');
+		$this->load->model('Turma_model');
+		$this->load->model('Arquivo_model');
+
+		$tarefa 	= $this->Tarefa_model->get($idtarefa);
+		$turma  	= $this->Turma_model->get($tarefa['idturma']);
+		$respostas  = $this->Arquivo_model->getByTarefa($tarefa['idtarefa'], false);
+		$arquivos  	= $this->Arquivo_model->getByTarefa($tarefa['idtarefa']);
+
+		$this->twig->display('alunos/tarefa', ['turma'=>$turma,
+												'tarefa'=>$tarefa,
+												"respostas"=>$respostas,
+												"arquivos"=>$arquivos]);
+	}
+
+	public function responderTarefa($idtarefa){
+		$path = saveUploadFile($idtarefa);
+		if ($path != false){
+			$this->load->model('Arquivo_model');
+			$data = ['idtarefa'=>$idtarefa, 'do_professor'=>false,
+					'caminho'=>$path, 'idusuario'=>$_SESSION['idusuario']];
+			$this->Arquivo_model->inserir($data);
+		}
+
+		Header('Location:' . base_url("alunoturma/tarefa/$idtarefa"));
 	}
 
 }
