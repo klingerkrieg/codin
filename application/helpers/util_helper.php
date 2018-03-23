@@ -77,19 +77,71 @@ if(!function_exists('deleteFolder')){
   }
 }
 
+    
+
+if(!function_exists('miniImage')){
+  function miniImage($path, $w, $h, $crop = false){
+    
+    list($width, $height) = getimagesize($path);
+    $r = $width / $height;
+    if ($crop) {
+        if ($width > $height) {
+            $width = ceil($width-($width*abs($r-$w/$h)));
+        } else {
+            $height = ceil($height-($height*abs($r-$w/$h)));
+        }
+        $newWidth = $w;
+        $newHeight = $h;
+    } else {
+        if ($w/$h > $r) {
+            $newWidth = $h*$r;
+            $newHeight = $h;
+        } else {
+            $newHeight = $w/$r;
+            $newWidth = $w;
+        }
+    }
+
+    $type = strtolower(getEnds($path,"."));
+    if ($type == "png"){
+      $src = imagecreatefrompng($path);
+    } else {
+      $src = imagecreatefromjpeg($path);
+    }
+
+    $dst = imagecreatetruecolor($newWidth, $newHeight);
+    imagecopyresampled($dst, $src, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+
+    $quality = 0;
+    if ($type == "png"){
+      imagepng($dst, $path, $quality);
+    } else {
+      imagejpeg($dst, $path, $quality);
+    }
+  }
+}
 
 if(!function_exists('saveUploadFile')){
-  function saveUploadFile($folder){
+  function saveUploadFile($folder,$inputName = "arquivo"){
     $uploaddir = './uploads/';
     
     #cria o diretório
     if (!file_exists($uploaddir . "/$folder/")){
-      mkdir($uploaddir . "/$folder/");
+      $allPath = $uploaddir . "/$folder/";
+      $allPath = str_replace("\\","/",$allPath);
+      $parts = explode("/",$allPath);
+      $complemento = "";
+      foreach($parts as $partPath){
+        $complemento .= $partPath . "/";
+        if (!file_exists($complemento)){
+          mkdir($complemento);
+        }
+      }
     }
     
-    $uploadfile = $uploaddir . "/$folder/" . basename($_FILES['arquivo']['name']);
+    $uploadfile = $uploaddir . "/$folder/" . basename($_FILES[$inputName]['name']);
     
-    $fname = basename($_FILES['arquivo']['name']);
+    $fname = basename($_FILES[$inputName]['name']);
     $try = 1;
     #enquanto existir um arquivo com aquele nome
     while (file_exists($uploadfile)){
@@ -99,7 +151,7 @@ if(!function_exists('saveUploadFile')){
       $try++;
     }
 
-    if (move_uploaded_file($_FILES['arquivo']['tmp_name'], $uploadfile)) {
+    if (move_uploaded_file($_FILES[$inputName]['tmp_name'], $uploadfile)) {
       return $uploadfile;
     } else {
       return false;

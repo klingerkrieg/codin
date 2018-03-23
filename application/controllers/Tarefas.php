@@ -5,7 +5,7 @@ class Tarefas extends CI_Controller {
 
 	public function __construct(){
 		parent::__construct();
-		if (_v($_SESSION,'idusuario') == ''){
+		if (_v($_SESSION,'user') == ''){
 			Header('Location:login');
 		}
 	}
@@ -33,14 +33,14 @@ class Tarefas extends CI_Controller {
 
 		$this->load->model('Tarefa_model');
 		$data = only($_POST,['idtarefa','titulo','data','hora','texto','idturma']);
-		$data['idprofessor'] = $_SESSION['idusuario'];
+		$data['idprofessor'] = $_SESSION['user']['idusuario'];
 		$idtarefa = $this->Tarefa_model->salvar($data);
 		
 		$path = saveUploadFile($idtarefa);
 		if ($path != false){
 			$this->load->model('Arquivo_model');
 			$data = ['idtarefa'=>$idtarefa, 'do_professor'=>true,
-					'caminho'=>$path, 'idusuario'=>$_SESSION['idusuario']];
+					'caminho'=>$path, 'idusuario'=>$_SESSION['user']['idusuario']];
 			$this->Arquivo_model->inserir($data);
 		}
 

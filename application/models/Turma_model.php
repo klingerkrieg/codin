@@ -45,7 +45,7 @@ class Turma_model extends CI_Model {
                 
 
                 $data = array();
-                $data['idusuario'] = $_SESSION['idusuario'];
+                $data['idusuario'] = $_SESSION['user']['idusuario'];
                 $data['idturma'] = $turma_id;
                 $turma = $this->db->insert("professor_turma",$data);
                 
@@ -66,7 +66,7 @@ class Turma_model extends CI_Model {
                         ." from turmas inner join "
                         ." professor_turma on "
                         ." professor_turma.idturma = turmas.idturma and "
-                        ." professor_turma.idusuario = ". $_SESSION['idusuario'];
+                        ." professor_turma.idusuario = ". $_SESSION['user']['idusuario'];
 
                 return $this->db->query($sql)->result_array();
         }
@@ -77,7 +77,7 @@ class Turma_model extends CI_Model {
                         ." from turmas inner join "
                         ." aluno_turma on "
                         ." aluno_turma.idturma = turmas.idturma and "
-                        ." aluno_turma.idusuario = ". $_SESSION['idusuario'];
+                        ." aluno_turma.idusuario = ". $_SESSION['user']['idusuario'];
 
                 return $this->db->query($sql)->result_array();
         }

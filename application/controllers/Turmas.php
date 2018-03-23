@@ -5,7 +5,7 @@ class Turmas extends CI_Controller {
 
 	public function __construct(){
 		parent::__construct();
-		if (_v($_SESSION,'idusuario') == ''){
+		if (_v($_SESSION,'user') == ''){
 			Header('Location:login');
 		}
 	}

@@ -110,7 +110,7 @@ class Twig
 
 
 
-		$this->twig->addGlobal("session", $_SESSION);
+		$this->twig->addGlobal("session", _v($_SESSION,'user'));
 	}
 
 	protected function setLoader($loader)

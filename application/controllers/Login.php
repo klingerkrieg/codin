@@ -6,18 +6,15 @@ class Login extends CI_Controller {
 	
 	public function index() {
 
-		$dados = array(
-			'texto' => 'Esse é um Template Twig'
-		);
-		$this->twig->display('login', $dados);
+		$this->twig->display('login');
 	}
 
 	public function logar(){
 		$this->load->model('Usuario_model');
-		$data = $this->Usuario_model->get(only($_POST,['email','senha']));
+		$data = $this->Usuario_model->login(only($_POST,['email','senha']));
 
 		if ($data->num_rows() > 0){
-			$_SESSION = $data->row_array();
+			$_SESSION['user'] = $data->row_array();
 			Header('Location:'.base_url()."home");
 		} else {
 			Header('Location:'.base_url()."login?f=1");

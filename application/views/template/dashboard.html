@@ -99,7 +99,11 @@
       </header>
       <div class="demo-drawer mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50">
         <header class="demo-drawer-header">
-          <img src="{{template_url()}}images/user.jpg" class="demo-avatar">
+          {% if session.foto == "" %}
+            <img src="{{template_url()}}images/user.jpg" class="demo-avatar">
+          {% else %}
+            <img src="{{base_url(session.foto)}}" class="demo-avatar">
+          {% endif %}
           <div class="demo-avatar-dropdown">
             <span>{{session.email}}</span>
             <div class="mdl-layout-spacer"></div>
@@ -108,7 +112,7 @@
               <span class="visuallyhidden">Accounts</span>
             </button>
             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="accbtn">
-              <li class="mdl-menu__item"><a href="#">Meu perfil</a></li>
+              <li class="mdl-menu__item"><a href="{{base_url('perfil')}}">Meu perfil</a></li>
               <li class="mdl-menu__item"><a href="{{base_url('login/logout')}}">Sair</a></li>
             </ul>
           </div>

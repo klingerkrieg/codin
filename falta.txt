@@ -6,6 +6,7 @@
         - Nota da correção
         - Texto da correção
 
-- Editar perfil
+
+- validações JS e PHP
 
 - Layout no Android

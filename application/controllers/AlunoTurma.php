@@ -5,7 +5,7 @@ class AlunoTurma extends CI_Controller {
 
 	public function __construct(){
 		parent::__construct();
-		if (_v($_SESSION,'idusuario') == ''){
+		if (_v($_SESSION,'user') == ''){
 			Header('Location:login');
 		}
 	}
@@ -19,12 +19,12 @@ class AlunoTurma extends CI_Controller {
 
 	public function entrar($chave){
 		$this->load->model('Turma_model');
-		print $this->Turma_model->inserirAluno($_SESSION['idusuario'],$chave);
+		print $this->Turma_model->inserirAluno($_SESSION['user']['idusuario'],$chave);
 	}
 
 	public function sair($idturma){
 		$this->load->model('Turma_model');
-		print $this->Turma_model->removerAluno($_SESSION['idusuario'],$idturma);
+		print $this->Turma_model->removerAluno($_SESSION['user']['idusuario'],$idturma);
 	}
 
 	public function listar(){
@@ -60,7 +60,7 @@ class AlunoTurma extends CI_Controller {
 		if ($path != false){
 			$this->load->model('Arquivo_model');
 			$data = ['idtarefa'=>$idtarefa, 'do_professor'=>false,
-					'caminho'=>$path, 'idusuario'=>$_SESSION['idusuario']];
+					'caminho'=>$path, 'idusuario'=>$_SESSION['user']['idusuario']];
 			$this->Arquivo_model->inserir($data);
 		}
 

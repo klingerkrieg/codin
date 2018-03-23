@@ -1,0 +1,89 @@
+{% extends "template/dashboard.html" %}
+
+{% block head %}
+<script src="{{base_url()}}assets/professor.js"></script>
+{% endblock %}
+
+{% block title %}
+
+<a href="{{base_url('home')}}">Home</a>
+
+{% endblock %}
+
+
+{% block menu_lateral %}
+<a class="waves-effect waves-light mdl-navigation__link modal-trigger" href="#cadTurma">
+<i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">local_offer</i>Nova turma</a>
+{% endblock %}
+
+
+{% block content %}
+
+<main class="mdl-layout__content mdl-color--grey-100">
+    <div class="mdl-grid demo-content">
+        <div class="demo-charts mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
+        
+        <form class="mdl-cell mdl-cell--12-col" action="{{base_url('perfil/salvar')}}" method="post" accept-charset="UTF-8" enctype="multipart/form-data">
+                
+        <div class="row">
+            <div class="input-field col s6">
+                Foto do perfil
+                <input id="foto" name="foto" type="file" >
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="input-field col s12">
+                <input id="nome" name="nome" type="text" class="validate" value="{{session.nome}}">
+                <label for="nome">Nome</label>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="input-field col s6">
+                <input id="email" name="email" type="email" class="validate" value="{{session.email}}">
+                <label for="email">Email</label>
+            </div>            
+        </div>
+
+            <div class="row">
+                <div class="input-field col s6">
+                    <input id="reemail" name="reemail" type="email" class="validate">
+                    <label for="reemail">Confirme o email</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s6">
+                    <input id="senha" name="senha" type="password" class="validate">
+                    <label for="senha">Senha</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s6">
+                    <input id="resenha" name="resenha" type="password" class="validate">
+                    <label for="resenha">Confirme a senha</label>
+                </div>
+            </div>
+            
+
+        <div class="row">
+            <div class="input-field col s12">
+                <button class='indigo lighten-1 btn-large'>Salvar</button>
+            </div>
+        </div>
+            
+        {% if errorMessage is defined %}
+            <p>{{ errorMessage }}</p>
+        {% endif %}
+    </form>
+
+    
+    </div>
+  </div>
+</main>
+
+
+{% endblock %}

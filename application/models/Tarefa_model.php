@@ -65,7 +65,7 @@ class Tarefa_model extends CI_Model {
                 $sql = "select idtarefa, titulo, texto, entrega, idprofessor, idturma, "
                         ." (select count(distinct idusuario) from arquivos "
                                 ." where idtarefa = tarefas.idtarefa and "
-                                ." do_professor = 0 and arquivos.idusuario = {$_SESSION['idusuario']} ) as concluido "
+                                ." do_professor = 0 and arquivos.idusuario = {$_SESSION['user']['idusuario']} ) as concluido "
                         ." from tarefas "
                         ." where idturma = $idturma ";
 
