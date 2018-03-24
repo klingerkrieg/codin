@@ -69,6 +69,7 @@ if(!function_exists('deleteFolder')){
         deleteFolder($path."/".$f);
         
         rmdir($path."/".$f);
+        sleep(10);
       }
     }
 
@@ -123,11 +124,10 @@ if(!function_exists('miniImage')){
 
 if(!function_exists('saveUploadFile')){
   function saveUploadFile($folder,$inputName = "arquivo"){
-    $uploaddir = './uploads/';
     
     #cria o diretório
-    if (!file_exists($uploaddir . "/$folder/")){
-      $allPath = $uploaddir . "/$folder/";
+    if (!file_exists( "$folder/")){
+      $allPath =  "$folder/";
       $allPath = str_replace("\\","/",$allPath);
       $parts = explode("/",$allPath);
       $complemento = "";
@@ -139,7 +139,7 @@ if(!function_exists('saveUploadFile')){
       }
     }
     
-    $uploadfile = $uploaddir . "/$folder/" . basename($_FILES[$inputName]['name']);
+    $uploadfile =  "$folder/" . basename($_FILES[$inputName]['name']);
     
     $fname = basename($_FILES[$inputName]['name']);
     $try = 1;
@@ -147,7 +147,7 @@ if(!function_exists('saveUploadFile')){
     while (file_exists($uploadfile)){
       $name_part = substr($fname,0,strrpos($fname,"."));
       $ext       = substr($fname,strrpos($fname,"."));
-      $uploadfile = $uploaddir . "/$folder/" . $name_part . "($try)" . $ext ;
+      $uploadfile = "$folder/" . $name_part . "($try)" . $ext ;
       $try++;
     }
 
@@ -155,6 +155,36 @@ if(!function_exists('saveUploadFile')){
       return $uploadfile;
     } else {
       return false;
+    }
+  }
+}
+
+
+if(!function_exists('unzip')){
+  function unzip($file){
+    $path = pathinfo(realpath($file), PATHINFO_DIRNAME);
+
+    if ( strtolower(getEnds($file,".")) == "zip") {
+      $zip = new ZipArchive;
+      $res = $zip->open($file);
+      if ($res === TRUE) {
+        // extract it to the path we determined above
+        $zip->extractTo($path);
+        $zip->close();
+        return true;
+      }
+    }
+    return false;
+  }
+}
+
+if(!function_exists('readFiles')){
+  function readFiles($path){
+    $files = array();
+    if ($handle = opendir($path)) {
+      while (false !== ($file = readdir($handle))) {
+        echo "$file\n";
+      }
     }
   }
 }

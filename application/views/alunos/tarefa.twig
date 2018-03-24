@@ -1,5 +1,8 @@
 {% extends "template/dashboard.html" %}
 
+{% block head %}
+<script src="{{base_url()}}assets/aluno.js"></script>
+{% endblock %}
 
 {% block title %}
 
@@ -12,6 +15,7 @@
 {% endblock %}
 
 {% block content %}
+
 
 <input type="hidden" id="idturma" value="{{turma.idturma}}">
 
@@ -41,17 +45,7 @@
             <div class="row">
                 <div class="input-field col s12">
                     Responda essa tarefa
-                    <input name="arquivo" type="file" />
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="input-field col s12">
-                {% for resp in respostas %}
-                <a target="_BLANK" href="{{base_url()}}{{resp.caminho}}" class="mdl-button mdl-js-button mdl-js-ripple-effect">
-                <img src="{{base_url('assets/imgs/')}}{{resp.ext}}.png"> {{resp.nome}}
-                </a>
-                {% endfor %}
+                    <input name="arquivo"  type="file" />
                 </div>
             </div>
 
@@ -60,6 +54,37 @@
                     <button type="submit" class='indigo lighten-1 btn waves-effect waves-green'>Enviar</button>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="input-field col s12">
+
+                {% if voltar %}
+                    <a href="{{base_url('alunoturma/tarefa/' ~ tarefa.idtarefa ~ voltar)}}" class="mdl-button mdl-js-button mdl-js-ripple-effect">
+                        <img src="{{base_url('assets/imgs/folder.png')}}"> ..
+                    </a>
+                {% endif %}
+
+                {% for resp in respostas %}
+                <div>
+
+                {% if resp.ext == "folder" %}
+                    <a href="{{base_url("alunoturma/tarefa/" ~ tarefa.idtarefa ~ resp.caminho_pasta)}}" class="mdl-button mdl-js-button mdl-js-ripple-effect">
+                {% else %}
+                    <a target="_BLANK" href="{{base_url(resp.caminho)}}" class="mdl-button mdl-js-button mdl-js-ripple-effect">
+                {% endif %}
+
+                <img src="{{base_url('assets/imgs/' ~ resp.ext ~ '.png')}}"> {{resp.nome}}
+                </a>
+
+                <a href="#" onclick="deletarArquivo({{tarefa.idtarefa}},'{{(resp.caminho)}}')">
+                    <img src="{{base_url('assets/imgs/delete.png')}}" />
+                </a>
+                </div>
+                {% endfor %}
+                </div>
+            </div>
+
+            
         </form>
 
         </div>

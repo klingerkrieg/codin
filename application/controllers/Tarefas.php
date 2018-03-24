@@ -10,7 +10,8 @@ class Tarefas extends CI_Controller {
 		}
 	}
 
-	public function index($idtarefa){
+	public function index($idtarefa, $path){
+
 		$this->load->model('Tarefa_model');
 		$this->load->model('Turma_model');
 		$this->load->model('Arquivo_model');

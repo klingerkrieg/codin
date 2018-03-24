@@ -50,3 +50,13 @@ function sairTurma(){
         listarTurmas();
     });
 }
+
+function deletarArquivo(idtarefa,path){
+    $.ajax({
+        method: "POST",
+        url: base_url + "/AlunoTurma/deletarArquivo/" + idtarefa,
+        data: {"path":path}
+    }).done(function(resp) {
+        window.location.reload();
+    });
+}
