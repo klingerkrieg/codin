@@ -3,7 +3,12 @@
 class Arquivo_model extends CI_Model {
 
         private $table = 'arquivos';
-        private $canRead = ['txt','css','html','php','json','js','md','java', 'rst'];
+        private $canRead = ['txt','css','html', 'xhtml','php','json','js','md','java', 'rst'];
+        private $canAccept = ['txt','css','html', 'xhtml','php','json','js','md','java', 'rst',
+                                'png', 'jpg', 'gif', 'jpeg', 'zip'];
+
+
+
 
         public function inserir($data){
                 //$this->output->enable_profiler(TRUE);
@@ -21,6 +26,9 @@ class Arquivo_model extends CI_Model {
                 if ($_SESSION['user']['is_professor'] == false){
                         $data['idusuario'] = $_SESSION['user']['idusuario'];
                 }
+
+
+                $this->db->select("idarquivo, idtarefa, caminho, idusuario, DATE_FORMAT(ifnull(data_atualizado, data_criado), '%d/%m/%Y %H:%i:%s') as data");
 
                 $arr = $this->db->get_where($this->table, $data)->row_array();
                 #pega o conteudo do arquivo
@@ -56,7 +64,7 @@ class Arquivo_model extends CI_Model {
 
         public function getByTarefa($idtarefa, $idaluno = null, $nivel = 0){
 
-                $sql = "select idarquivo, caminho, idusuario "
+                $sql = "select idarquivo, caminho, idusuario, DATE_FORMAT(ifnull(data_atualizado, data_criado), '%d/%m/%Y %H:%i:%s') as data "
                         ." from arquivos where idtarefa = $idtarefa";
                 
 
@@ -81,13 +89,17 @@ class Arquivo_model extends CI_Model {
                 $arq['nome'] = getEnds($arq['caminho'],"/");
                 $arq['ext'] = "folder";
                 $arq['caminho_exec'] = "/".substr($arq['caminho'], strpos($arq['caminho'],$hash));
-
+                $arq['exists'] = true;
                 if (is_file($arq['caminho'])){
                         $arq['ext'] = strtolower(getEnds($arq['caminho'],"."));
                         if ($arq['ext'] == strtolower(trim($arq['nome'],"."))){
                                 $arq['ext'] = "txt";
                         }
                         $arq['can_read'] = in_array($arq['ext'], $this->canRead);
+                }
+                if (!file_exists($arq['caminho'])){
+                        $arq['ext'] = "forbbiden";
+                        $arq['exists'] = false;
                 }
 
                 return $arq;
@@ -107,21 +119,65 @@ class Arquivo_model extends CI_Model {
                 return $this->db->delete($this->table, ["idtarefa"=>$idtarefa]);
         }
 
-        public function uploadFiles($idtarefa, $keyFile){
+        public function checkSecurity($file){
+                $ext = strtolower(getEnds($file,"."));
+                if (in_array($ext, $this->canAccept)){
+                        $content = str_replace(" ","",file_get_contents($file));
+
+                        global $badCode;
+                        foreach($badCode as $func){
+                                if (strpos($content,$func) !== false){
+                                        unlink($file);
+                                        $texto = "Esse código parece muito perigoso. Você não pode enviar arquivos que contenham \"$func\".";
+                                        $this->db->insert("alertas",['idusuario'=>$_SESSION['user']['idusuario'],
+                                                                        'texto'=>$texto]);
+                                        $_SESSION['user']['errors'] = $texto;
+                                        return false;
+                                }
+                        }
+
+                } else {
+                        unlink($file);
+                        $texto = "Você não pode enviar arquivos com extensão '$ext'.";
+                        $this->db->insert("alertas",['idusuario'=>$_SESSION['user']['idusuario'],
+                                                        'texto'=>$texto]);
+                        $_SESSION['user']['errors'] = $texto;
+                        return false;
+                }
+
+                return true;
+        }
+
+        public function uploadFiles($idtarefa, $keyFile, $override=false){
                 $path = $this->generateRespostaPath($idtarefa);
 		
-		$path = saveUploadFile($path, $keyFile);
-		
+		$path = saveUploadFile($path, $keyFile, $override);
+                
 		$files = unzip($path);
 		if (sizeof($files) > 0){
                         
                         foreach($files as $file) {
-                                $file = str_replace("//","/",str_replace("\\","/",trim($file,"/")));
-                                $data = ['idtarefa'=>$idtarefa, 'do_professor'=>false,
-                                        'caminho'=>$file, 'idusuario'=>$_SESSION['user']['idusuario'],
-                                        'nivel'=>substr_count($file,"/"),
-                                        'is_folder'=>!is_file($file)];
-                                $this->inserir($data);
+
+                                if ($this->checkSecurity($file)){
+                                        $file = str_replace("//","/",str_replace("\\","/",trim($file,"/")));
+
+                                        $rw = $this->db->get_where($this->table,['caminho'=>$file])->row_array();
+
+                                        #só reinsere no banco caso não exista
+                                        if (sizeof($rw) == 0){
+                                                $data = ['idtarefa'=>$idtarefa, 'do_professor'=>false,
+                                                        'caminho'=>$file, 'idusuario'=>$_SESSION['user']['idusuario'],
+                                                        'nivel'=>substr_count($file,"/"),
+                                                        'is_folder'=>!is_file($file)];
+                                                $this->inserir($data);
+                                        } else {
+                                                #se ja existir apenas atualiza a hora
+                                                $this->db->update($this->table,
+                                                                ['data_atualizado'=> Date('Y-m-d H:i:s')],
+                                                                ["idarquivo"=>$rw['idarquivo']] );
+                                        }
+                                }
+                                
                         }
 		}
         }

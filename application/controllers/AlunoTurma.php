@@ -8,6 +8,7 @@ class AlunoTurma extends CI_Controller {
 		if (_v($_SESSION,'user') == ''){
 			Header('Location:login');
 		}
+
 	}
 
 	public function index($chave){
@@ -72,12 +73,14 @@ class AlunoTurma extends CI_Controller {
 												"respostas"=>$respostas,
 												"arquivos"=>$arquivos,
 												"voltar"=>$back]);
+
+		$_SESSION['user']['errors'] = "";
 	}
 
 	public function responderTarefa($idtarefa){
 		$this->load->model('Arquivo_model');
 
-		$this->Arquivo_model->uploadFiles($idtarefa, "arquivo");
+		$this->Arquivo_model->uploadFiles($idtarefa, "arquivo", true);
 		
 		Header('Location:' . base_url("alunoturma/tarefa/$idtarefa"));
 	}

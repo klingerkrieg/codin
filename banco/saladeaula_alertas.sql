@@ -18,24 +18,21 @@ USE `saladeaula`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `usuarios`
+-- Table structure for table `alertas`
 --
 
-DROP TABLE IF EXISTS `usuarios`;
+DROP TABLE IF EXISTS `alertas`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `usuarios` (
-  `idusuario` int(11) NOT NULL AUTO_INCREMENT,
-  `nome` varchar(245) NOT NULL,
-  `email` varchar(245) NOT NULL,
-  `senha` varchar(40) NOT NULL,
-  `token` varchar(40) DEFAULT NULL,
-  `is_professor` tinyint(1) NOT NULL DEFAULT '0',
-  `foto` varchar(200) DEFAULT NULL,
-  `data_criado` datetime NOT NULL,
-  `data_atualizado` datetime DEFAULT NULL,
-  PRIMARY KEY (`idusuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+CREATE TABLE `alertas` (
+  `idalerta` int(11) NOT NULL AUTO_INCREMENT,
+  `idusuario` int(11) NOT NULL,
+  `texto` varchar(345) NOT NULL,
+  `data_criado` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`idalerta`),
+  KEY `idusuario_idx` (`idusuario`),
+  CONSTRAINT `idusuario` FOREIGN KEY (`idusuario`) REFERENCES `usuarios` (`idusuario`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -47,4 +44,4 @@ CREATE TABLE `usuarios` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-03-25 11:36:38
+-- Dump completed on 2018-03-25 15:27:46

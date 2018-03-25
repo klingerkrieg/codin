@@ -25,6 +25,9 @@
     <div class="mdl-grid demo-content">
         <div class="demo-charts mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
         
+        {% if session.errors %}
+            <div class="card-panel white-text orange darken-4">{{session.errors}}</div>
+        {% endif %}
         
         <form id='respostaForm' method="POST" action="{{base_url('alunoturma/responderTarefa/' ~ tarefa.idtarefa)}}" accept-charset="UTF-8" enctype="multipart/form-data">
 
@@ -67,27 +70,40 @@
                 {% endif %}
 
                 {% for resp in respostas %}
-                <div>
-
-                {% if resp.ext == "folder" %}
-                    <a href="{{base_url("alunoturma/tarefa/" ~ tarefa.idtarefa ~ resp.caminho_exec)}}" class="mdl-button mdl-js-button mdl-js-ripple-effect">
-                {% else %}
-                    <a target="_BLANK" href="{{base_url('uploads/' ~ tarefa.idtarefa ~ resp.caminho_exec)}}" class="mdl-button mdl-js-button mdl-js-ripple-effect">
-                {% endif %}
-
-                <img src="{{base_url('assets/imgs/' ~ resp.ext ~ '.png')}}"> {{resp.nome}}
-                </a>
-
-                <a href="#" onclick="deletarArquivo({{tarefa.idtarefa}},'{{(resp.idarquivo)}}')">
-                    <img src="{{base_url('assets/imgs/delete.png')}}" />
-                </a>
                 
-                {% if resp.can_read %}
-                    <a href="{{base_url('alunoturma/verarquivo/' ~ tarefa.idtarefa ~ '/' ~ resp.idarquivo)}}">
-                        <img src="{{base_url('assets/imgs/view.png')}}" />
+
+                {% if resp.exists %}
+                    <div>
+                    {% if resp.ext == "folder" %}
+                        <a href="{{base_url("alunoturma/tarefa/" ~ tarefa.idtarefa ~ resp.caminho_exec)}}" class="mdl-button mdl-js-button mdl-js-ripple-effect tooltipped" data-position="right" data-tooltip="{{resp.data}}">
+                    {% else %}
+                        <a target="_BLANK" href="{{base_url('uploads/' ~ tarefa.idtarefa ~ resp.caminho_exec)}}" class="mdl-button mdl-js-button mdl-js-ripple-effect tooltipped" data-position="right" data-tooltip="{{resp.data}}">
+                    {% endif %}
+
+                    <img src="{{base_url('assets/imgs/' ~ resp.ext ~ '.png')}}"> {{resp.nome}}
                     </a>
+
+                    <a href="#" onclick="deletarArquivo({{tarefa.idtarefa}},'{{(resp.idarquivo)}}')">
+                        <img src="{{base_url('assets/imgs/delete.png')}}" />
+                    </a>
+                    
+                    {% if resp.can_read %}
+                        <a href="{{base_url('alunoturma/verarquivo/' ~ tarefa.idtarefa ~ '/' ~ resp.idarquivo)}}">
+                            <img src="{{base_url('assets/imgs/view.png')}}" />
+                        </a>
+                    {% endif %}
+                    </div>
+                {% else %}
+                    <div>
+                        <a href="#" class="mdl-button mdl-js-button mdl-js-ripple-effect tooltipped" data-position="right" data-tooltip="{{resp.data}}">
+                            <img src="{{base_url('assets/imgs/' ~ resp.ext ~ '.png')}}"> {{resp.nome}}
+                        </a>
+                        <a href="#" onclick="deletarArquivo({{tarefa.idtarefa}},'{{(resp.idarquivo)}}')">
+                            <img src="{{base_url('assets/imgs/delete.png')}}" />
+                        </a>
+                    </div>
                 {% endif %}
-                </div>
+
                 {% endfor %}
                 </div>
             </div>

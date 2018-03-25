@@ -123,7 +123,7 @@ if(!function_exists('miniImage')){
 }
 
 if(!function_exists('saveUploadFile')){
-  function saveUploadFile($folder,$inputName){
+  function saveUploadFile($folder,$inputName,$override=false){
     
     #cria o diretório
     if (!file_exists( "$folder/")){
@@ -141,14 +141,16 @@ if(!function_exists('saveUploadFile')){
     
     $uploadfile =  "$folder/" . basename($_FILES[$inputName]['name']);
     
-    $fname = basename($_FILES[$inputName]['name']);
-    $try = 1;
-    #enquanto existir um arquivo com aquele nome
-    while (file_exists($uploadfile)){
-      $name_part = substr($fname,0,strrpos($fname,"."));
-      $ext       = substr($fname,strrpos($fname,"."));
-      $uploadfile = "$folder/" . $name_part . "($try)" . $ext ;
-      $try++;
+    if (!$override){
+      $fname = basename($_FILES[$inputName]['name']);
+      $try = 1;
+      #enquanto existir um arquivo com aquele nome
+      while (file_exists($uploadfile)){
+        $name_part = substr($fname,0,strrpos($fname,"."));
+        $ext       = substr($fname,strrpos($fname,"."));
+        $uploadfile = "$folder/" . $name_part . "($try)" . $ext ;
+        $try++;
+      }
     }
 
     if (move_uploaded_file($_FILES[$inputName]['tmp_name'], $uploadfile)) {
@@ -205,3 +207,9 @@ if(!function_exists('readFiles')){
     }
   }
 }
+
+global $badCode;
+$badCode = ['fopen','tmpfile','bzopen','gzopen','chgrp','chmod','chown','copy','file_put_contents','lchgrp','lchown','link','mkdir','move_uploaded_file','rename','rmdir','symlink','tempnam','touch','unlink','imagepng','imagewbmp','image2wbmp ','imagejpeg','imagexbm','imagegif','imagegd','imagegd2','iptcembed','ftp_get','ftp_nb_get','file_exists','file_get_contents','file','fileatime','filectime','filegroup','fileinode','filemtime','fileowner','fileperms','filesize','filetype','glob','is_dir','is_executable','is_file','is_link','is_readable','is_uploaded_file','is_writable','is_writeable','linkinfo','lstat','parse_ini_file','pathinfo','readfile','readlink','realpath','stat','gzfile','readgzfile','getimagesize','imagecreatefromgif','imagecreatefromjpeg','imagecreatefrompng','imagecreatefromwbmp','imagecreatefromxbm','imagecreatefromxpm','ftp_put','ftp_nb_put','exif_read_data','read_exif_data','exif_thumbnail','exif_imagetype','hash_file','hash_hmac_file','hash_update_file','md5_file','sha1_file','highlight_file','show_source','php_strip_whitespace','get_meta_tags',
+            'extract','parse_str','putenv','ini_set','mail(','proc_nice','proc_terminate','proc_close','pfsockopen','fsockopen','apache_child_terminate','posix_kill','posix_mkfifo','posix_setpgid','posix_setsid','posix_setuid',
+            'phpinfo','posix_mkfifo','posix_getlogin','posix_ttyname','getenv','get_current_user','proc_get_status','get_cfg_var','disk_free_space','disk_total_space','diskfreespace','getcwd','getlastmo','getmygid','getmyinode','getmypid','getmyuid',
+            'dl','exec','shell_exec','system','passthru','popen','pclose','proc_open','proc_nice','proc_terminate','proc_get_status','proc_close','pfsockopen','leak','apache_child_terminate','posix_kill','posix_mkfifo','posix_setpgid','posix_setsid','posix_setuid'];
