@@ -1,0 +1,35 @@
+{% extends "template/dashboard.html" %}
+
+{% block head %}
+<script src="{{base_url()}}assets/aluno.js"></script>
+<script src="{{base_url()}}assets/prism.js"></script>
+<link rel="stylesheet" type="text/css" href="{{base_url()}}assets/prism.css"></link>
+{% endblock %}
+
+{% block title %}
+
+{% include 'alunos/breadcrumb.html' %}
+
+{% endblock %}
+
+{% block menu_lateral %}
+
+{% endblock %}
+
+{% block content %}
+
+
+<input type="hidden" id="idturma" value="{{turma.idturma}}">
+
+<main class="mdl-layout__content mdl-color--grey-100">
+    <div class="mdl-grid demo-content">
+        <div class="demo-charts mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
+        <b>{{arquivo.caminho_arq}}</b>
+        <hr/>
+        <pre  class='line-numbers' data-src="{{base_url('/uploads/' ~ tarefa.idtarefa ~ arquivo.caminho_arq)}}"><code style="width:100%;" class='language-{{arquivo.ext}}'>{{arquivo.content}}</code></pre>
+        </div>
+    </div>
+</main>
+
+
+{% endblock %}

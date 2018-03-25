@@ -3,6 +3,7 @@
 class Arquivo_model extends CI_Model {
 
         private $table = 'arquivos';
+        private $canRead = ['txt','css','html','php','json','js','md','java', 'rst'];
 
         public function inserir($data){
                 //$this->output->enable_profiler(TRUE);
@@ -13,6 +14,20 @@ class Arquivo_model extends CI_Model {
                 $this->db->insert($this->table,$data);
                 return $this->db->insert_id();
 
+        }
+
+        public function get($idarquivo){
+                $data = array('idarquivo'=>$idarquivo);
+                if ($_SESSION['user']['is_professor'] == false){
+                        $data['idusuario'] = $_SESSION['user']['idusuario'];
+                }
+
+                $arr = $this->db->get_where($this->table, $data)->row_array();
+                #pega o conteudo do arquivo
+                $arr['content'] = file_get_contents($arr['caminho']);
+                #pega as demais informacoes do arquivo
+                $arr = $this->getFileData($arr, $this->pathHash($arr['idtarefa']));
+                return $arr;
         }
 
         public function getByAlunos($idtarefa, $alunos){
@@ -41,22 +56,6 @@ class Arquivo_model extends CI_Model {
 
         public function getByTarefa($idtarefa, $idaluno = null, $nivel = 0){
 
-                //trazer tambem se o aluno já entregou essa tarefa
-                /*$this->db->select('idarquivo, caminho, idusuario ');
-                $where = ['idtarefa'=>$idtarefa, 'do_professor'=>$doProfessor];
-                #Caso tenha um aluno como filtro
-                if ($idaluno != null){
-                        $where['idusuario'] = $idaluno;
-                }
-
-                if ($fromPath != ""){
-                        $this->db->like(['caminho'=>$fromPath]);
-                }
-
-                $arquivos = $this->db->get_where($this->table,$where)->result_array();
-                $arquivos = $this->getFilesData($arquivos);
-                
-                return $arquivos;*/
                 $sql = "select idarquivo, caminho, idusuario "
                         ." from arquivos where idtarefa = $idtarefa";
                 
@@ -77,34 +76,27 @@ class Arquivo_model extends CI_Model {
 
         }
 
-        /*function readFiles($path, $idusuario){
-                $arquivos = array();
-                if ($handle = opendir($path)) {
-                        while (false !== ($file = readdir($handle))) {
-                                if ($file != "." && $file != "..")
-                                        array_push($arquivos, ["idusuario"=>$idusuario, "caminho"=>$path."/".$file]);
+        public function getFileData($arq,$hash){
+
+                $arq['nome'] = getEnds($arq['caminho'],"/");
+                $arq['ext'] = "folder";
+                $arq['caminho_exec'] = "/".substr($arq['caminho'], strpos($arq['caminho'],$hash));
+
+                if (is_file($arq['caminho'])){
+                        $arq['ext'] = strtolower(getEnds($arq['caminho'],"."));
+                        if ($arq['ext'] == strtolower(trim($arq['nome'],"."))){
+                                $arq['ext'] = "txt";
                         }
+                        $arq['can_read'] = in_array($arq['ext'], $this->canRead);
                 }
-                return $this->getFilesData($arquivos);
-        }*/
+
+                return $arq;
+        }
 
         public function getFilesData($idtarefa, $arquivos){
                 $hash = $this->pathHash($idtarefa);
                 for ($y = 0; $y < sizeof($arquivos); $y++){
-                        if (is_file($arquivos[$y]['caminho'])){
-                                $arquivos[$y]['nome'] = getEnds($arquivos[$y]['caminho'],"/");
-                                $arquivos[$y]['ext'] = strtolower(getEnds($arquivos[$y]['caminho'],"."));
-
-                                $arquivos[$y]['caminho_arq'] = "/".substr($arquivos[$y]['caminho'], strpos($arquivos[$y]['caminho'],$hash));
-
-                                if (strtolower($arquivos[$y]['ext']) == strtolower(trim($arquivos[$y]['nome'],"."))){
-                                        $arquivos[$y]['ext'] = "txt";
-                                }
-                        } else {
-                                $arquivos[$y]['nome'] = getEnds($arquivos[$y]['caminho'],"/");
-                                $arquivos[$y]['ext'] = "folder";
-                                $arquivos[$y]['caminho_pasta'] = "/".substr($arquivos[$y]['caminho'], strpos($arquivos[$y]['caminho'],$hash));
-                        }
+                        $arquivos[$y] = $this->getFileData($arquivos[$y],$hash);
                 }
                 return $arquivos;
         }
@@ -115,10 +107,10 @@ class Arquivo_model extends CI_Model {
                 return $this->db->delete($this->table, ["idtarefa"=>$idtarefa]);
         }
 
-        public function uploadFiles($idtarefa,$files){
+        public function uploadFiles($idtarefa, $keyFile){
                 $path = $this->generateRespostaPath($idtarefa);
 		
-		$path = saveUploadFile($path);
+		$path = saveUploadFile($path, $keyFile);
 		
 		$files = unzip($path);
 		if (sizeof($files) > 0){

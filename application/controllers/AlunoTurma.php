@@ -77,7 +77,7 @@ class AlunoTurma extends CI_Controller {
 	public function responderTarefa($idtarefa){
 		$this->load->model('Arquivo_model');
 
-		$this->Arquivo_model->uploadFiles($idtarefa, $_FILES);
+		$this->Arquivo_model->uploadFiles($idtarefa, "arquivo");
 		
 		Header('Location:' . base_url("alunoturma/tarefa/$idtarefa"));
 	}
@@ -87,6 +87,20 @@ class AlunoTurma extends CI_Controller {
 		$this->load->model('Arquivo_model');
 		$path = $this->Arquivo_model->excluir($idtarefa,$idarquivo);
 		
+	}
+
+	function verarquivo($idtarefa, $idarquivo){
+		$this->load->model('Arquivo_model');
+		$this->load->model('Tarefa_model');
+		$this->load->model('Turma_model');
+
+		$arq 	= $this->Arquivo_model->get($idarquivo);
+		$tarefa = $this->Tarefa_model->get($idtarefa);
+		$turma 	= $this->Turma_model->get($tarefa['idturma']);
+
+		$this->twig->display('alunos/arquivo', ['arquivo'=>$arq,
+												'tarefa'=>$tarefa,
+												'turma'=>$turma]);
 	}
 
 }

@@ -123,7 +123,7 @@ if(!function_exists('miniImage')){
 }
 
 if(!function_exists('saveUploadFile')){
-  function saveUploadFile($folder,$inputName = "arquivo"){
+  function saveUploadFile($folder,$inputName){
     
     #cria o diretório
     if (!file_exists( "$folder/")){
