@@ -70,13 +70,13 @@
                 {% if resp.ext == "folder" %}
                     <a href="{{base_url("alunoturma/tarefa/" ~ tarefa.idtarefa ~ resp.caminho_pasta)}}" class="mdl-button mdl-js-button mdl-js-ripple-effect">
                 {% else %}
-                    <a target="_BLANK" href="{{base_url(resp.caminho)}}" class="mdl-button mdl-js-button mdl-js-ripple-effect">
+                    <a target="_BLANK" href="{{base_url('uploads/' ~ tarefa.idtarefa ~ resp.caminho_arq)}}" class="mdl-button mdl-js-button mdl-js-ripple-effect">
                 {% endif %}
 
                 <img src="{{base_url('assets/imgs/' ~ resp.ext ~ '.png')}}"> {{resp.nome}}
                 </a>
 
-                <a href="#" onclick="deletarArquivo({{tarefa.idtarefa}},'{{(resp.caminho)}}')">
+                <a href="#" onclick="deletarArquivo({{tarefa.idtarefa}},'{{(resp.idarquivo)}}')">
                     <img src="{{base_url('assets/imgs/delete.png')}}" />
                 </a>
                 </div>

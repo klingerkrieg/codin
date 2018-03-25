@@ -51,11 +51,10 @@ function sairTurma(){
     });
 }
 
-function deletarArquivo(idtarefa,path){
+function deletarArquivo(idtarefa,idarquivo){
     $.ajax({
         method: "POST",
-        url: base_url + "/AlunoTurma/deletarArquivo/" + idtarefa,
-        data: {"path":path}
+        url: base_url + "/AlunoTurma/deletarArquivo/"+idtarefa+"/"+idarquivo
     }).done(function(resp) {
         window.location.reload();
     });

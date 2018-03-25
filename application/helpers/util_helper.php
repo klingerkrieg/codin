@@ -162,7 +162,18 @@ if(!function_exists('saveUploadFile')){
 
 if(!function_exists('unzip')){
   function unzip($file){
+    $files = array();
+
+    if ($file == ""){
+      return $files;
+    }
+
     $path = pathinfo(realpath($file), PATHINFO_DIRNAME);
+    $path = str_replace("\\","/",$path);
+
+    #adiciona o proprio arquivo
+    $file = str_replace("\\","/",realpath($file));
+    array_push($files, $file);
 
     if ( strtolower(getEnds($file,".")) == "zip") {
       $zip = new ZipArchive;
@@ -170,11 +181,17 @@ if(!function_exists('unzip')){
       if ($res === TRUE) {
         // extract it to the path we determined above
         $zip->extractTo($path);
+        //lista os arquivos presentes no zip
+        for($i = 0; $i < $zip->numFiles; $i++) {
+          array_push($files, $path."/".$zip->getNameIndex($i));
+        }
         $zip->close();
-        return true;
+        return $files;
       }
     }
-    return false;
+    
+    
+    return $files;
   }
 }
 

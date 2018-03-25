@@ -58,13 +58,13 @@ class AlunoTurma extends CI_Controller {
 		$tarefa 	= $this->Tarefa_model->get($idtarefa);
 		$turma  	= $this->Turma_model->get($tarefa['idturma']);
 
-		if ($path != ""){
-			$respostas  = $this->Arquivo_model->readFiles("./uploads/$idtarefa/". $path, $_SESSION['user']['idusuario']);
-			$voltar = $back;
-		} else {
-			$respostas  = $this->Arquivo_model->getByTarefa($tarefa['idtarefa'], false, $_SESSION['user']['idusuario']);
-			$voltar = $back;
-		}
+		#procura os arquivos do aluno
+		$nivel = max([substr_count($path,"/") - 1, 0]);
+		$respostas  = $this->Arquivo_model->getByTarefa($tarefa['idtarefa'],
+														$_SESSION['user']['idusuario'],
+														$nivel);
+		$voltar = $back;
+		
 		$arquivos  	= $this->Arquivo_model->getByTarefa($tarefa['idtarefa']);
 
 		$this->twig->display('alunos/tarefa', ['turma'=>$turma,
@@ -76,40 +76,16 @@ class AlunoTurma extends CI_Controller {
 
 	public function responderTarefa($idtarefa){
 		$this->load->model('Arquivo_model');
-		$path = $this->Arquivo_model->generateRespostaPath($idtarefa);
-		
-		$path = saveUploadFile($path);
-		
-		unzip($path);
-		if ($path != false){
-			
-			$data = ['idtarefa'=>$idtarefa, 'do_professor'=>false,
-					'caminho'=>$path, 'idusuario'=>$_SESSION['user']['idusuario']];
-			$this->Arquivo_model->inserir($data);
-		}
+
+		$this->Arquivo_model->uploadFiles($idtarefa, $_FILES);
 		
 		Header('Location:' . base_url("alunoturma/tarefa/$idtarefa"));
 	}
 
-	function deletarArquivo($idtarefa){
+	function deletarArquivo($idtarefa,$idarquivo){
 
 		$this->load->model('Arquivo_model');
-		$path = $this->Arquivo_model->generateRespostaPath($idtarefa);
-
-		#remove as possiveis barras duplas
-		$_POST['path'] = str_replace("//","/", $_POST['path']);
-		
-		#o endereco de exclusao tem que bater com o esperado
-		if (strpos($_POST['path'] , $path ) !== false){
-			if (is_file($_POST['path'])){
-				unlink($_POST['path']);
-			} else {
-				deleteFolder($_POST['path']);
-			}
-			print 'excluido';
-		} else {
-			print "falha ao excluir";
-		}
+		$path = $this->Arquivo_model->excluir($idtarefa,$idarquivo);
 		
 	}
 

@@ -31,31 +31,53 @@ class Arquivo_model extends CI_Model {
                 return $tarefas;
         }
 
-        public function generateRespostaPath($idtarefa){
-                return "./uploads/".$idtarefa."/". substr(sha1($idtarefa.$_SESSION['user']['idusuario']),0,10);
+        public function pathHash($idtarefa){
+                return substr(sha1($idtarefa.$_SESSION['user']['idusuario']),0,10);
         }
 
-        public function getByTarefa($idtarefa, $doProfessor = true, $idaluno = null){
+        public function generateRespostaPath($idtarefa){
+                return "./uploads/".$idtarefa."/". $this->pathHash($idtarefa);
+        }
+
+        public function getByTarefa($idtarefa, $idaluno = null, $nivel = 0){
+
+                //trazer tambem se o aluno já entregou essa tarefa
+                /*$this->db->select('idarquivo, caminho, idusuario ');
+                $where = ['idtarefa'=>$idtarefa, 'do_professor'=>$doProfessor];
+                #Caso tenha um aluno como filtro
+                if ($idaluno != null){
+                        $where['idusuario'] = $idaluno;
+                }
+
+                if ($fromPath != ""){
+                        $this->db->like(['caminho'=>$fromPath]);
+                }
+
+                $arquivos = $this->db->get_where($this->table,$where)->result_array();
+                $arquivos = $this->getFilesData($arquivos);
+                
+                return $arquivos;*/
+                $sql = "select idarquivo, caminho, idusuario "
+                        ." from arquivos where idtarefa = $idtarefa";
+                
 
                 if ($idaluno != null){
-                        //Caso seja de aluno le todo o diretorio do aluno
-                        $path = $this->generateRespostaPath($idtarefa);
-                        $arquivos = $this->readFiles($path, $idaluno);
+                        $sql .= " and nivel = $nivel + (SELECT min(nivel) FROM saladeaula.arquivos where idusuario = $idaluno and idtarefa = $idtarefa) ";
+                        $sql .= " and idusuario = $idaluno ";
                 } else {
-                        //trazer tambem se o aluno já entregou essa tarefa
-                        $this->db->select('caminho, idusuario ');
-                        $where = ['idtarefa'=>$idtarefa, 'do_professor'=>$doProfessor];
-                        #Caso tenha um aluno como filtro
-                        if ($idaluno != null){
-                                $where['idusuario'] = $idaluno;
-                        }
-                        $arquivos = $this->db->get_where($this->table,$where)->result_array();
-                        $arquivos = $this->getFilesData($arquivos);
+                        $sql .= " and do_professor = 1 ";
                 }
+
+                $sql .= " order by is_folder desc ";
+
+                $arquivos = $this->db->query($sql)->result_array();
+                $arquivos = $this->getFilesData($idtarefa,$arquivos);
+                
                 return $arquivos;
+
         }
 
-        function readFiles($path, $idusuario){
+        /*function readFiles($path, $idusuario){
                 $arquivos = array();
                 if ($handle = opendir($path)) {
                         while (false !== ($file = readdir($handle))) {
@@ -64,13 +86,16 @@ class Arquivo_model extends CI_Model {
                         }
                 }
                 return $this->getFilesData($arquivos);
-        }
+        }*/
 
-        public function getFilesData($arquivos){
+        public function getFilesData($idtarefa, $arquivos){
+                $hash = $this->pathHash($idtarefa);
                 for ($y = 0; $y < sizeof($arquivos); $y++){
                         if (is_file($arquivos[$y]['caminho'])){
                                 $arquivos[$y]['nome'] = getEnds($arquivos[$y]['caminho'],"/");
                                 $arquivos[$y]['ext'] = strtolower(getEnds($arquivos[$y]['caminho'],"."));
+
+                                $arquivos[$y]['caminho_arq'] = "/".substr($arquivos[$y]['caminho'], strpos($arquivos[$y]['caminho'],$hash));
 
                                 if (strtolower($arquivos[$y]['ext']) == strtolower(trim($arquivos[$y]['nome'],"."))){
                                         $arquivos[$y]['ext'] = "txt";
@@ -78,10 +103,7 @@ class Arquivo_model extends CI_Model {
                         } else {
                                 $arquivos[$y]['nome'] = getEnds($arquivos[$y]['caminho'],"/");
                                 $arquivos[$y]['ext'] = "folder";
-                                $arquivos[$y]['caminho_pasta'] = $arquivos[$y]['caminho'];
-                                $arquivos[$y]['caminho_pasta'] = substr($arquivos[$y]['caminho_pasta'],strpos($arquivos[$y]['caminho_pasta'],"/")+1);
-                                $arquivos[$y]['caminho_pasta'] = substr($arquivos[$y]['caminho_pasta'],strpos($arquivos[$y]['caminho_pasta'],"/")+1);
-                                $arquivos[$y]['caminho_pasta'] = "/".substr($arquivos[$y]['caminho_pasta'],strpos($arquivos[$y]['caminho_pasta'],"/")+1);
+                                $arquivos[$y]['caminho_pasta'] = "/".substr($arquivos[$y]['caminho'], strpos($arquivos[$y]['caminho'],$hash));
                         }
                 }
                 return $arquivos;
@@ -91,6 +113,40 @@ class Arquivo_model extends CI_Model {
                 
 		deleteFolder('./uploads/'.$idtarefa);
                 return $this->db->delete($this->table, ["idtarefa"=>$idtarefa]);
+        }
+
+        public function uploadFiles($idtarefa,$files){
+                $path = $this->generateRespostaPath($idtarefa);
+		
+		$path = saveUploadFile($path);
+		
+		$files = unzip($path);
+		if (sizeof($files) > 0){
+                        
+                        foreach($files as $file) {
+                                $file = str_replace("//","/",str_replace("\\","/",trim($file,"/")));
+                                $data = ['idtarefa'=>$idtarefa, 'do_professor'=>false,
+                                        'caminho'=>$file, 'idusuario'=>$_SESSION['user']['idusuario'],
+                                        'nivel'=>substr_count($file,"/"),
+                                        'is_folder'=>!is_file($file)];
+                                $this->inserir($data);
+                        }
+		}
+        }
+
+
+        public function excluir($idtarefa,$idarquivo){
+
+                $this->db->select('caminho');
+                $rw = $this->db->get_where($this->table,['idarquivo'=>$idarquivo,
+                                                   'idtarefa'=>$idtarefa,
+                                                   'idusuario'=>$_SESSION['user']['idusuario'],
+                                                ])->row_array();
+                
+                $sql = "delete from arquivos where "
+                        ." caminho like '{$rw['caminho']}%'";
+
+                $this->db->query($sql);
         }
 
 
