@@ -51,7 +51,6 @@ class AlunoTurma extends CI_Controller {
 			$i++;
 		}
 		
-		
 		$this->load->model('Tarefa_model');
 		$this->load->model('Turma_model');
 		$this->load->model('Arquivo_model');
@@ -63,8 +62,7 @@ class AlunoTurma extends CI_Controller {
 		$nivel = max([substr_count($path,"/") - 1, 0]);
 		$respostas  = $this->Arquivo_model->getByTarefa($tarefa['idtarefa'],
 														$_SESSION['user']['idusuario'],
-														$nivel);
-		$voltar = $back;
+														$nivel, $path);
 		
 		$arquivos  	= $this->Arquivo_model->getByTarefa($tarefa['idtarefa']);
 
@@ -81,7 +79,7 @@ class AlunoTurma extends CI_Controller {
 		$this->load->model('Arquivo_model');
 
 		$this->Arquivo_model->uploadFiles($idtarefa, "arquivo", true);
-		
+		die();
 		Header('Location:' . base_url("alunoturma/tarefa/$idtarefa"));
 	}
 
@@ -101,9 +99,15 @@ class AlunoTurma extends CI_Controller {
 		$tarefa = $this->Tarefa_model->get($idtarefa);
 		$turma 	= $this->Turma_model->get($tarefa['idturma']);
 
-		$this->twig->display('alunos/arquivo', ['arquivo'=>$arq,
+		if ($_SESSION['user']['is_professor'] == true){
+			$this->twig->display('professores/arquivo', ['arquivo'=>$arq,
+														'tarefa'=>$tarefa,
+														'turma'=>$turma]);
+		} else {
+			$this->twig->display('alunos/arquivo', ['arquivo'=>$arq,
 												'tarefa'=>$tarefa,
 												'turma'=>$turma]);
+		}
 	}
 
 }

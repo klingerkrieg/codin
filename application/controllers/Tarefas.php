@@ -10,7 +10,21 @@ class Tarefas extends CI_Controller {
 		}
 	}
 
-	public function index($idtarefa, $path){
+	public function index($idtarefa, $idaluno=null){
+
+		$i = 5;
+		$path = "";
+		$back = "";
+		while ($this->uri->segment($i) != false){
+			$back = $path;
+			$path .= "/".$this->uri->segment($i);
+			$i++;
+		}
+		$back = "/$idaluno" . $back;
+		
+		#procura os arquivos do aluno
+		$nivel = max([substr_count($path,"/") - 1, 0]);
+
 
 		$this->load->model('Tarefa_model');
 		$this->load->model('Turma_model');
@@ -18,15 +32,22 @@ class Tarefas extends CI_Controller {
 
 		$tarefa 	= $this->Tarefa_model->get($idtarefa);
 		$turma  	= $this->Turma_model->get($tarefa['idturma']);
+
 		$arquivos  	= $this->Arquivo_model->getByTarefa($tarefa['idtarefa']);
+
 		$alunos 	= $this->Turma_model->getAlunos($tarefa['idturma']);
-		$alunos 	= $this->Arquivo_model->getByAlunos($tarefa['idtarefa'],$alunos);
+		$alunos 	= $this->Arquivo_model->getByAlunos($tarefa['idtarefa'],
+														$alunos, 
+														$idaluno,
+														$nivel, $path);
 
 
 		$this->twig->display('professores/tarefa', ['turma'=>$turma,
-													'tarefa'=>$tarefa,
-													"alunos"=>$alunos,
-													"arquivos"=>$arquivos]);
+												'tarefa'=>$tarefa,
+												"arquivos"=>$arquivos,
+												"voltar"=>$back,
+												"alunos"=>$alunos]);
+
 	}
 
 	public function salvar() {

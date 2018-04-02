@@ -38,10 +38,14 @@ class Arquivo_model extends CI_Model {
                 return $arr;
         }
 
-        public function getByAlunos($idtarefa, $alunos){
+        public function getByAlunos($idtarefa, $alunos, $idaluno, $nivel, $path){
                 $this->load->model('Arquivo_model');
                 for($i = 0; $i < sizeof($alunos); $i++ ){
-                        $alunos[$i]['respostas'] = $this->getByTarefa($idtarefa, false, $alunos[$i]['idusuario']);
+                        if ($idaluno != $alunos[$i]['idusuario']) {
+                                $nivel = 0;
+                                $path = null;
+                        }
+                        $alunos[$i]['respostas'] = $this->getByTarefa($idtarefa, $alunos[$i]['idusuario'], $nivel, $path);
                 }
                 return $alunos;
         }
@@ -54,23 +58,36 @@ class Arquivo_model extends CI_Model {
                 return $tarefas;
         }
 
-        public function pathHash($idtarefa){
-                return substr(sha1($idtarefa.$_SESSION['user']['idusuario']),0,10);
+        public function pathHash($idtarefa, $idusuario = null){
+                if ($idusuario == null){
+                        return substr(sha1($idtarefa.$_SESSION['user']['idusuario']),0,10);
+                } else {
+                        return substr(sha1($idtarefa.$idusuario),0,10);
+                }
         }
 
         public function generateRespostaPath($idtarefa){
                 return "./uploads/".$idtarefa."/". $this->pathHash($idtarefa);
         }
 
-        public function getByTarefa($idtarefa, $idaluno = null, $nivel = 0){
+        public function getByTarefa($idtarefa, $idaluno = null, $nivel = null, $path = null){
 
-                $sql = "select idarquivo, caminho, idusuario, DATE_FORMAT(ifnull(data_atualizado, data_criado), '%d/%m/%Y %H:%i:%s') as data "
-                        ." from arquivos where idtarefa = $idtarefa";
+                $sql = "select idarquivo, caminho, arquivos.idusuario, DATE_FORMAT(ifnull(arquivos.data_atualizado, arquivos.data_criado), '%d/%m/%Y %H:%i:%s') as data "
+                        ." from arquivos " 
+                        ." where idtarefa = $idtarefa";
                 
-
                 if ($idaluno != null){
+                        
+                        
                         $sql .= " and nivel = $nivel + (SELECT min(nivel) FROM saladeaula.arquivos where idusuario = $idaluno and idtarefa = $idtarefa) ";
-                        $sql .= " and idusuario = $idaluno ";
+                        $sql .= " and arquivos.idusuario = $idaluno ";
+
+                        if ($path != null){
+                                $path = trim($path, "/");
+                                $path .= "/";
+                                $sql .= " and caminho like '%$path%' ";
+                        }
+                        
                 } else {
                         $sql .= " and do_professor = 1 ";
                 }
@@ -78,10 +95,19 @@ class Arquivo_model extends CI_Model {
                 $sql .= " order by is_folder desc ";
 
                 $arquivos = $this->db->query($sql)->result_array();
-                $arquivos = $this->getFilesData($idtarefa,$arquivos);
+                $arquivos = $this->getFilesData($idtarefa, $idaluno, $arquivos);
                 
+
                 return $arquivos;
 
+        }
+
+        public function getFilesData($idtarefa, $idusuario, $arquivos){
+                $hash = $this->pathHash($idtarefa, $idusuario);
+                for ($y = 0; $y < sizeof($arquivos); $y++){
+                        $arquivos[$y] = $this->getFileData($arquivos[$y],$hash);
+                }
+                return $arquivos;
         }
 
         public function getFileData($arq,$hash){
@@ -105,13 +131,7 @@ class Arquivo_model extends CI_Model {
                 return $arq;
         }
 
-        public function getFilesData($idtarefa, $arquivos){
-                $hash = $this->pathHash($idtarefa);
-                for ($y = 0; $y < sizeof($arquivos); $y++){
-                        $arquivos[$y] = $this->getFileData($arquivos[$y],$hash);
-                }
-                return $arquivos;
-        }
+        
 
         public function excluirByTarefa($idtarefa){
                 
@@ -120,7 +140,13 @@ class Arquivo_model extends CI_Model {
         }
 
         public function checkSecurity($file){
+                if (!is_file($file)){
+                        //Se for diretorio pode
+                        return true;
+                }
+
                 $ext = strtolower(getEnds($file,"."));
+                
                 if (in_array($ext, $this->canAccept)){
                         $content = str_replace(" ","",file_get_contents($file));
 
@@ -164,7 +190,8 @@ class Arquivo_model extends CI_Model {
                                         $rw = $this->db->get_where($this->table,['caminho'=>$file])->row_array();
 
                                         #só reinsere no banco caso não exista
-                                        if (sizeof($rw) == 0){
+                                        //if (sizeof($rw) == 0){
+                                        if ( $rw == false ){
                                                 $data = ['idtarefa'=>$idtarefa, 'do_professor'=>false,
                                                         'caminho'=>$file, 'idusuario'=>$_SESSION['user']['idusuario'],
                                                         'nivel'=>substr_count($file,"/"),
