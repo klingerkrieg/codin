@@ -28,7 +28,7 @@ CREATE TABLE `turmas` (
   `idturma` int(11) NOT NULL AUTO_INCREMENT,
   `nome` varchar(145) NOT NULL,
   `chave` varchar(8) DEFAULT NULL,
-  `data_criado` datetime NOT NULL,
+  `data_criado` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `data_atualizado` datetime DEFAULT NULL,
   PRIMARY KEY (`idturma`),
   UNIQUE KEY `chave_UNIQUE` (`chave`)
@@ -44,4 +44,4 @@ CREATE TABLE `turmas` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-03-25 15:27:45
+-- Dump completed on 2018-04-04 18:42:48

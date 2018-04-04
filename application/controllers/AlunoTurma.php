@@ -95,9 +95,9 @@ class AlunoTurma extends CI_Controller {
 		$this->load->model('Tarefa_model');
 		$this->load->model('Turma_model');
 
-		$arq 	= $this->Arquivo_model->get($idarquivo);
-		$tarefa = $this->Tarefa_model->get($idtarefa);
-		$turma 	= $this->Turma_model->get($tarefa['idturma']);
+		$arq 		= $this->Arquivo_model->get($idarquivo);
+		$tarefa 	= $this->Tarefa_model->get($idtarefa);
+		$turma 		= $this->Turma_model->get($tarefa['idturma']);
 
 		if ($_SESSION['user']['is_professor'] == true){
 			$this->twig->display('professores/arquivo', ['arquivo'=>$arq,

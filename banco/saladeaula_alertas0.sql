@@ -18,28 +18,21 @@ USE `saladeaula`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `arquivos`
+-- Table structure for table `alertas`
 --
 
-DROP TABLE IF EXISTS `arquivos`;
+DROP TABLE IF EXISTS `alertas`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `arquivos` (
-  `idarquivo` int(11) NOT NULL AUTO_INCREMENT,
-  `caminho` varchar(245) NOT NULL,
-  `nivel` int(11) DEFAULT NULL,
-  `is_folder` tinyint(4) DEFAULT NULL,
-  `do_professor` tinyint(1) NOT NULL DEFAULT '0',
-  `idtarefa` int(11) NOT NULL,
-  `idusuario` int(11) DEFAULT NULL,
-  `data_criado` datetime NOT NULL,
-  `data_atualizado` datetime DEFAULT NULL,
-  PRIMARY KEY (`idarquivo`),
-  KEY `fk_arquivos_tarefas1_idx` (`idtarefa`),
-  KEY `fk_arquivos_usuarios1_idx` (`idusuario`),
-  CONSTRAINT `fk_arquivos_tarefas1` FOREIGN KEY (`idtarefa`) REFERENCES `tarefas` (`idtarefa`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_arquivos_usuarios1` FOREIGN KEY (`idusuario`) REFERENCES `usuarios` (`idusuario`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4284 DEFAULT CHARSET=latin1;
+CREATE TABLE `alertas` (
+  `idalerta` int(11) NOT NULL AUTO_INCREMENT,
+  `idusuario` int(11) NOT NULL,
+  `texto` varchar(345) NOT NULL,
+  `data_criado` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`idalerta`),
+  KEY `idusuario_idx` (`idusuario`),
+  CONSTRAINT `idusuario` FOREIGN KEY (`idusuario`) REFERENCES `usuarios` (`idusuario`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -51,4 +44,4 @@ CREATE TABLE `arquivos` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-03-25 15:27:47
+-- Dump completed on 2018-04-04 18:42:46

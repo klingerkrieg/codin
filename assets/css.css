@@ -14,3 +14,46 @@ hr {
 .code-toolbar{
     width:100%;
 }
+
+.line{
+    width:100%;
+    display:block;
+}
+
+.line .codeObs{
+    display:inline-block;
+    /*display:none; resolvi deixar sempre a mostra*/
+    background-image: url('./imgs/write.png');
+    width: 16px;
+    height: 16px;
+    background-size: 14px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+.line:hover .codeObs{
+    display:inline-block;
+}
+
+.correcaoText{
+    background-color:yellow;
+    position: fixed;
+    text-shadow: none;
+    border-radius: 3px;
+    padding-left:3px;
+    padding-right:20px;
+}
+
+.minimizeCorrecao{
+    width:12px;
+    position: absolute;
+    top: 2px;
+    right: 3px;
+    cursor:pointer;
+}
+
+.maximizeCorrecao{
+    background-color:yellow;
+    width:12px;
+    cursor:pointer;
+}
