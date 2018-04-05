@@ -72,12 +72,13 @@ class Arquivo_model extends CI_Model {
 
         public function getByTarefa($idtarefa, $idaluno = null, $nivel = null, $path = null){
 
-                $sql = "select idarquivo, caminho, arquivos.idusuario, DATE_FORMAT(ifnull(arquivos.data_atualizado, arquivos.data_criado), '%d/%m/%Y %H:%i:%s') as data "
-                        ." from arquivos " 
+                $sql = "select arquivos.idarquivo, caminho, arquivos.idusuario, "
+                        ." (select count(correcoes.idarquivo) from correcoes where correcoes.idarquivo = arquivos.idarquivo)  as qtd_correcoes,  "
+                        ." DATE_FORMAT(ifnull(arquivos.data_atualizado, arquivos.data_criado), '%d/%m/%Y %H:%i:%s') as data "
+                        ." from arquivos "
                         ." where idtarefa = $idtarefa";
                 
                 if ($idaluno != null){
-                        
                         
                         $sql .= " and nivel = $nivel + (SELECT min(nivel) FROM saladeaula.arquivos where idusuario = $idaluno and idtarefa = $idtarefa) ";
                         $sql .= " and arquivos.idusuario = $idaluno ";

@@ -57,3 +57,10 @@ hr {
     width:12px;
     cursor:pointer;
 }
+
+.qtdCorrecoes{
+    width:20px;
+    display:inline-block;
+    text-align:center;
+    border-radius: 10px;
+}

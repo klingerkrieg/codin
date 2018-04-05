@@ -29,6 +29,7 @@ class Tarefas extends CI_Controller {
 		$this->load->model('Tarefa_model');
 		$this->load->model('Turma_model');
 		$this->load->model('Arquivo_model');
+		$this->load->model('Nota_model');
 
 		$tarefa 	= $this->Tarefa_model->get($idtarefa);
 		$turma  	= $this->Turma_model->get($tarefa['idturma']);
@@ -40,6 +41,7 @@ class Tarefas extends CI_Controller {
 														$alunos, 
 														$idaluno,
 														$nivel, $path);
+		$alunos 	= $this->Nota_model->getByAlunos($idtarefa,$alunos);
 
 
 		$this->twig->display('professores/tarefa', ['turma'=>$turma,
@@ -67,6 +69,21 @@ class Tarefas extends CI_Controller {
 		}
 
 		print $idtarefa;
+	}
+
+	public function salvarNota($idtarefa,$idaluno){
+		#salva
+		$this->load->model('Nota_model');
+		$data = only($_POST,['nota']);
+		$data['idtarefa'] = $idtarefa;
+		$data['idaluno'] = $idaluno;
+		$this->Nota_model->salvar($data);
+		#confirma
+		$nota = $this->Nota_model->get($idtarefa,$idaluno);
+		
+		if ($_POST['nota'] == $nota){
+			print 'ok';
+		}
 	}
 
 	public function get($idtarefa){

@@ -54,8 +54,10 @@ class AlunoTurma extends CI_Controller {
 		$this->load->model('Tarefa_model');
 		$this->load->model('Turma_model');
 		$this->load->model('Arquivo_model');
+		$this->load->model('Nota_model');
 
 		$tarefa 	= $this->Tarefa_model->get($idtarefa);
+		$nota 		= $this->Nota_model->get($idtarefa, $_SESSION['user']['idusuario']);
 		$turma  	= $this->Turma_model->get($tarefa['idturma']);
 
 		#procura os arquivos do aluno
@@ -70,7 +72,8 @@ class AlunoTurma extends CI_Controller {
 												'tarefa'=>$tarefa,
 												"respostas"=>$respostas,
 												"arquivos"=>$arquivos,
-												"voltar"=>$back]);
+												"voltar"=>$back,
+												"nota"=>$nota]);
 
 		$_SESSION['user']['errors'] = "";
 	}

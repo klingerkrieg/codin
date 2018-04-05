@@ -1,10 +1,12 @@
-
+﻿
 - Envio de arquivo .zip
     - descomprimir e implantar
     - visualização do aluno
     - visualização do professor
         - Nota da correção
         - Texto da correção
+		- vis aluno
+		- vis prof
 
 
 - validações JS e PHP

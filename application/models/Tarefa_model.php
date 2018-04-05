@@ -15,7 +15,7 @@ class Tarefa_model extends CI_Model {
         public function atualizar($data){
                 $data['data_atualizado'] = Date('Y-m-d H:i:s');
 
-                if ($data['data'] != ""){
+                if (isset($data['data']) && $data['data'] != ""){
                         $data['entrega'] = date_br_to_mysql($data['data']).' '.$data['hora'];
                 }
                 unset($data['data']);
@@ -36,7 +36,7 @@ class Tarefa_model extends CI_Model {
         }
 
         public function get($idtarefa){
-                $this->db->select('idtarefa, idturma, titulo, texto, entrega, idprofessor ');
+                $this->db->select('idtarefa, idturma, nota_max, titulo, texto, entrega, idprofessor ');
                 $arr = $this->db->get_where($this->table,['idtarefa'=>$idtarefa])->row_array();
                 $parts = explode(' ',$arr['entrega']);
                 if ($parts[0] != ""){

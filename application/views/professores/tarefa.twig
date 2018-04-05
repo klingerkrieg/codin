@@ -50,17 +50,22 @@
             </div>
         </div>
     </div>
-</main>
+
 
 {% for aluno in alunos %}
 
-<main class="mdl-layout__content mdl-color--grey-100">
-    <div class="mdl-grid demo-content">
-        <div class="demo-charts mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
+
+    <div class="demo-charts mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
             <div>
             <div class="row">
                 <div class="input-field col s12">
-                {{aluno.nome|e}} -  {{aluno.email|e}}
+                    <h5>{{aluno.nome|e}} -  {{aluno.email|e}}</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="nota" name="nota" type="text" value="{{aluno.nota}}" onblur="salvarNota({{tarefa.idtarefa}},{{aluno.idusuario}},this)" class="validate col s4">
+                    <label for="nota">Nota</label>
                 </div>
             </div>
 
@@ -89,13 +94,17 @@
                             <img src="{{base_url('assets/imgs/view.png')}}" />
                         </a>
                     {% endif %}
+
+                    {% if resp.qtd_correcoes > 0 %}
+                        <span class='lime lighten-2 qtdCorrecoes'>{{resp.qtd_correcoes}}</span>
+                    {% endif %}
                     </div>
                 {% endfor %}
                 
                 </div>
             </div> 
             </div>
-        </div>
+        
     </div>
 </main>
 {% endfor %}

@@ -163,3 +163,27 @@ function editarTarefa(id){
         Materialize.updateTextFields();
     });
 }
+
+function salvarNota(idtarefa, idaluno, el){
+    el = $(el);
+    nota = el.val().replace(",",".");
+    el.val(nota);
+    if (nota < 0 || nota > 100 || isNaN(nota)){
+        el.val("");
+        return;
+    }
+    
+    el.addClass('orange');
+    el.removeClass('light-green');
+    
+    $.ajax({
+        method: "POST",
+        url: base_url + "/tarefas/salvarNota/"+idtarefa+"/"+idaluno,
+        data: {'nota':el.val()}
+    }).done(function(resp) {
+        if (resp == 'ok'){        
+            el.addClass('light-green');
+            el.removeClass('orange');
+        }
+    });
+}
