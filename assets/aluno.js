@@ -18,12 +18,7 @@ $(function(){
 });
 
 function entrarTurma(){
-    $.ajax({
-        method: "GET",
-        url: base_url + "/AlunoTurma/entrar/" + $('#chave').val()
-    }).done(function(resp) {
-        window.location = base_url + 'AlunoTurma/' +  resp;
-    });
+    $('#carTurmaForm').submit();
 }
 
   
@@ -52,10 +47,11 @@ function selectTurma(id){
 function sairTurma(){
     $.ajax({
         method: "POST",
-        url: base_url + "/AlunoTurma/sair/" + $('#chave').val()
+        url: base_url + "/AlunoTurma/sair/" + turmaSelected
     }).done(function(resp) {
         listarTurmas();
     });
+    $('.modal').modal('close');
 }
 
 function deletarArquivo(idtarefa,idarquivo){

@@ -21,6 +21,13 @@ class Tarefas extends CI_Controller {
 			$i++;
 		}
 		$back = "/$idaluno" . $back;
+		if (substr_count($back,"/") < 2){
+			$back = "";
+		} else
+		if (substr_count($back,"/") == 2){
+			$back = "/";
+		}
+		
 		
 		#procura os arquivos do aluno
 		$nivel = max([substr_count($path,"/") - 1, 0]);
@@ -36,7 +43,7 @@ class Tarefas extends CI_Controller {
 
 		$arquivos  	= $this->Arquivo_model->getByTarefa($tarefa['idtarefa']);
 
-		$alunos 	= $this->Turma_model->getAlunos($tarefa['idturma']);
+		$alunos 	= $this->Turma_model->getAlunos($tarefa['idturma'], $idaluno);
 		$alunos 	= $this->Arquivo_model->getByAlunos($tarefa['idtarefa'],
 														$alunos, 
 														$idaluno,
@@ -60,7 +67,7 @@ class Tarefas extends CI_Controller {
 		$data['idprofessor'] = $_SESSION['user']['idusuario'];
 		$idtarefa = $this->Tarefa_model->salvar($data);
 		
-		$path = saveUploadFile($idtarefa);
+		$path = saveUploadFile($idtarefa, "arquivo", true);
 		if ($path != false){
 			$this->load->model('Arquivo_model');
 			$data = ['idtarefa'=>$idtarefa, 'do_professor'=>true,

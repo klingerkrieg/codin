@@ -24,11 +24,15 @@ class Turma_model extends CI_Model {
                 return $arr;
         }
 
-        public function getAlunos($idturma){
+        public function getAlunos($idturma, $idaluno = null){
                 $sql = "select usuarios.idusuario, nome, email from usuarios "
                         ." inner join aluno_turma on "
                         ." usuarios.idusuario = aluno_turma.idusuario "
                         ." where aluno_turma.idturma = $idturma";
+
+                if ($idaluno != null){
+                        $sql .= " and aluno_turma.idusuario = $idaluno ";
+                }
 
                 return $this->db->query($sql)->result_array();
         }
@@ -91,14 +95,19 @@ class Turma_model extends CI_Model {
         public function inserirAluno($idaluno, $chave){
                 $data = $this->getByChave($chave);
 
+                if ($data['idturma'] == ""){
+                        $_SESSION['user']['errors'] = "Não existe nenhuma turma com essa chave.";
+                        return false;
+                }
+
                 $sql = "insert into aluno_turma (idusuario, idturma) values ($idaluno, {$data['idturma']} )";
+                $this->db->db_debug = FALSE;//nao gerar erro caso o aluno esteja entrando em uma turma que ele já possui
                 $this->db->query($sql);
                 return $data['idturma'];
         }
 
         public function removerAluno($idaluno, $idturma){
-                $data = $this->getByChave($chave);
-                return $this->db->delete("aluno_turma", ["idturma"=>$idturma, "idaluno"=>$idaluno]);
+                return $this->db->delete("aluno_turma", ["idturma"=>$idturma, "idusuario"=>$idaluno]);
         }
         
 

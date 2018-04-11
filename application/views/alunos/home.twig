@@ -18,6 +18,15 @@
 
 {% block content %}
 
+
+{% if msg != "" %}
+<script>
+$(function(){
+    Materialize.toast( "{{msg}}" , 10000);
+});
+</script>
+{% endif %}
+
 <main class="mdl-layout__content mdl-color--grey-100">
     <div class="mdl-grid demo-content" id='turmas'>
 

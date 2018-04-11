@@ -9,7 +9,7 @@
     
     </div>
     <div class="mdl-card__supporting-text mdl-color-text--grey-600">
-    {{tarefa.texto|e}}
+        <pre>{{tarefa.texto|e}}</pre>
         <div>
         {% for arq in tarefa.arquivos %}
             <a target="_BLANK" href="{{base_url()}}{{arq.caminho}}" class="mdl-button mdl-js-button mdl-js-ripple-effect">

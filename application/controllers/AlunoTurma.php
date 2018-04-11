@@ -18,9 +18,16 @@ class AlunoTurma extends CI_Controller {
 		$this->twig->display('alunos/turma', ['turma'=>$turma]);
 	}
 
-	public function entrar($chave){
+	public function entrar(){
+		$post = only($_POST,['chave']);
+
 		$this->load->model('Turma_model');
-		print $this->Turma_model->inserirAluno($_SESSION['user']['idusuario'],$chave);
+		$idturma = $this->Turma_model->inserirAluno($_SESSION['user']['idusuario'],$post['chave']);
+		if ($idturma != false){
+			Header('Location:' . base_url("alunoturma/index/{$post['chave']}"));
+		} else {
+			Header('Location:' . base_url("home"));
+		}
 	}
 
 	public function sair($idturma){
@@ -82,7 +89,7 @@ class AlunoTurma extends CI_Controller {
 		$this->load->model('Arquivo_model');
 
 		$this->Arquivo_model->uploadFiles($idtarefa, "arquivo", true);
-		die();
+		
 		Header('Location:' . base_url("alunoturma/tarefa/$idtarefa"));
 	}
 

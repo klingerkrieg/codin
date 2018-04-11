@@ -19,6 +19,35 @@
 {% block content %}
 
 
+<div class="fixed-action-btn">
+  
+    {% if nota == "" %}
+        <a class="btn-floating btn-large grey darken-2 naoCorrigida">
+        Esta tarefa ainda não foi corrigida, valerá {{tarefa.nota_max}}.
+        </a>
+    {% else %}
+
+        {% if nota < tarefa.nota_max * 0.25 %}
+            <a class="btn-floating btn-large red darken-4 nota">
+        {% elseif nota < tarefa.nota_max * 0.5 %}
+            <a class="btn-floating btn-large orange darken-4 nota">
+        {% elseif nota < tarefa.nota_max * 0.7 %}
+            <a class="btn-floating btn-large lime darken-3 nota">
+        {% elseif nota < tarefa.nota_max * 0.9 %}
+            <a class="btn-floating btn-large light-green darken-1 nota">
+        {% else %}
+            <a class="btn-floating btn-large green darken-3 nota">
+        {% endif %}
+        
+            Nota obtida: {{nota}}/{{tarefa.nota_max}}
+        </a>
+    {% endif %}
+        
+  </a>
+</div>
+      
+
+
 <input type="hidden" id="idturma" value="{{turma.idturma}}">
 
 <main class="mdl-layout__content mdl-color--grey-100">
@@ -31,36 +60,10 @@
         
         <form id='respostaForm' method="POST" action="{{base_url('alunoturma/responderTarefa/' ~ tarefa.idtarefa)}}" accept-charset="UTF-8" enctype="multipart/form-data">
 
-            <div class="row">
-                <div class="input-field col s8">
-                </div>
-                <div class="input-field col s4">
-                    
-                    {% if nota == "" %}
-                        Esta tarefa ainda não foi corrigida, valerá {{tarefa.nota_max}}.
-                    {% else %}
-
-                        {% if nota < tarefa.nota_max * 0.5 %}
-                            <div class="card-panel orange darken-4">
-                        {% elseif nota < tarefa.nota_max * 0.7 %}
-                            <div class="card-panel lime accent-3">
-                        {% elseif nota < tarefa.nota_max * 0.9 %}
-                            <div class="card-panel green accent-3">
-                        {% else %}             
-                            <div class="card-panel green accent-4">
-                        {% endif %}
-                        
-                            Nota obtida: {{nota}}/{{tarefa.nota_max}}
-                        </div>
-                    {% endif %}
-                    
-                </div>
-            </div>
-
 
             <div class="row">
                 <div class="col s12">
-                    {{tarefa.texto|e}}
+                    <pre>{{tarefa.texto|e}}</pre>
                 </div>
             </div>
 
@@ -68,7 +71,7 @@
             <div class="row">
                 <div class="input-field col s12">
                 {% for arq in arquivos %}
-                <a target="_BLANK" href="{{base_url(arq.caminho)}}" class="mdl-button mdl-js-button mdl-js-ripple-effect">
+                <a target="_BLANK" href="{{base_url(arq.caminho)}}" class="mdl-button mdl-js-button mdl-js-ripple-effect left">
                 <img src="{{base_url('assets/imgs/' ~ arq.ext ~ '.png')}}"> {{arq.nome}}
                 </a>
                 {% endfor %}
@@ -79,9 +82,14 @@
             
                         
             <div class="row">
-                <div class="input-field col s12">
-                    Responda essa tarefa
-                    <input name="arquivo"  type="file" />
+                <div class="file-field input-field col s12">
+                <div class="btn indigo lighten-1">
+                    <span>Anexar resolução</span>
+                    <input name="arquivo" type="file">
+                </div>
+                <div class="file-path-wrapper">
+                    <input class="file-path validate" type="text">
+                </div>
                 </div>
             </div>
 

@@ -64,3 +64,25 @@ hr {
     text-align:center;
     border-radius: 10px;
 }
+
+
+pre{
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+}
+
+.nota{
+    width:200px !important;
+    border-radius: 50px;
+}
+
+.naoCorrigida{
+    width:300px !important;
+    height:50px !important;
+    line-height: inherit;
+    border-radius: 50px;
+    padding:5px;
+}
+
+.left{
+    text-align:left;
+}

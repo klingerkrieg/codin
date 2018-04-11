@@ -13,11 +13,17 @@ class Home extends CI_Controller {
 	}
 
 	public function index() {
+		
+		$data = array();
+		if (_v($_SESSION['user'],'errors') != ""){
+			$data = array('msg'=>$_SESSION['user']['errors']);
+			unset($_SESSION['user']['errors']);
+		}
 
 		if ($_SESSION['user']['is_professor'] == true){
-			$this->twig->display('./professores/home');
+			$this->twig->display('./professores/home', $data);
 		} else {
-			$this->twig->display('./alunos/home');
+			$this->twig->display('./alunos/home', $data);
 		}
 		
 	}
