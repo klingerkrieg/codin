@@ -18,21 +18,21 @@ USE `saladeaula`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `alertas`
+-- Table structure for table `turmas`
 --
 
-DROP TABLE IF EXISTS `alertas`;
+DROP TABLE IF EXISTS `turmas`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `alertas` (
-  `idalerta` int(11) NOT NULL AUTO_INCREMENT,
-  `idusuario` int(11) NOT NULL,
-  `texto` varchar(345) NOT NULL,
+CREATE TABLE `turmas` (
+  `idturma` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` varchar(145) NOT NULL,
+  `chave` varchar(8) DEFAULT NULL,
   `data_criado` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`idalerta`),
-  KEY `idusuario_idx` (`idusuario`),
-  CONSTRAINT `idusuario` FOREIGN KEY (`idusuario`) REFERENCES `usuarios` (`idusuario`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
+  `data_atualizado` datetime DEFAULT NULL,
+  PRIMARY KEY (`idturma`),
+  UNIQUE KEY `chave_UNIQUE` (`chave`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -44,4 +44,4 @@ CREATE TABLE `alertas` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-04 18:42:46
+-- Dump completed on 2018-04-11 22:17:41

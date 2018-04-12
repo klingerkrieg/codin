@@ -125,6 +125,9 @@ if(!function_exists('miniImage')){
 if(!function_exists('saveUploadFile')){
   function saveUploadFile($folder,$inputName,$override=false){
     
+    $uploadDir = "uploads/";
+    $folder = $uploadDir . $folder;
+
     #cria o diretório
     if (!file_exists( "$folder/")){
       $allPath =  "$folder/";

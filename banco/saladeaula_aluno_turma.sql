@@ -27,6 +27,7 @@ DROP TABLE IF EXISTS `aluno_turma`;
 CREATE TABLE `aluno_turma` (
   `idusuario` int(11) NOT NULL,
   `idturma` int(11) NOT NULL,
+  PRIMARY KEY (`idusuario`,`idturma`),
   KEY `fk_aluno_turma_usuarios1_idx` (`idusuario`),
   KEY `fk_aluno_turma_turmas1_idx` (`idturma`),
   CONSTRAINT `fk_aluno_turma_turmas1` FOREIGN KEY (`idturma`) REFERENCES `turmas` (`idturma`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -43,4 +44,4 @@ CREATE TABLE `aluno_turma` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-04 18:42:45
+-- Dump completed on 2018-04-11 22:17:38

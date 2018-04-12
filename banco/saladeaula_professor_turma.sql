@@ -18,26 +18,20 @@ USE `saladeaula`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `correcoes`
+-- Table structure for table `professor_turma`
 --
 
-DROP TABLE IF EXISTS `correcoes`;
+DROP TABLE IF EXISTS `professor_turma`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `correcoes` (
-  `idcorrecao` int(11) NOT NULL AUTO_INCREMENT,
-  `idarquivo` int(11) NOT NULL,
-  `idprofessor` int(11) NOT NULL,
-  `linha` int(11) NOT NULL,
-  `texto` varchar(6000) NOT NULL,
-  `data_criado` datetime NOT NULL,
-  `data_atualizado` datetime DEFAULT NULL,
-  PRIMARY KEY (`idcorrecao`),
-  KEY `correcaoArquivo_idx` (`idarquivo`),
-  KEY `professor_idx` (`idprofessor`),
-  CONSTRAINT `correcaoArquivo` FOREIGN KEY (`idarquivo`) REFERENCES `arquivos` (`idarquivo`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `professor` FOREIGN KEY (`idprofessor`) REFERENCES `usuarios` (`idusuario`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+CREATE TABLE `professor_turma` (
+  `idusuario` int(11) NOT NULL,
+  `idturma` int(11) NOT NULL,
+  KEY `fk_professor_turma_usuarios_idx` (`idusuario`),
+  KEY `fk_professor_turma_turmas1_idx` (`idturma`),
+  CONSTRAINT `fk_professor_turma_turmas1` FOREIGN KEY (`idturma`) REFERENCES `turmas` (`idturma`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_professor_turma_usuarios` FOREIGN KEY (`idusuario`) REFERENCES `usuarios` (`idusuario`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -49,4 +43,4 @@ CREATE TABLE `correcoes` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-11 22:17:39
+-- Dump completed on 2018-04-11 22:17:40

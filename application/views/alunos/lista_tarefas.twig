@@ -6,8 +6,10 @@
     
         <span class="mdl-cell mdl-cell--9-col">{{ tarefa.titulo|e }}</span>
         <span class="mdl-cell mdl-cell--3-col">
-        {% if 1 == tarefa.concluido %} Concluído 
-        {% else %} Não concluído
+        {% if 1 == tarefa.concluido %} 
+           <img src="{{base_url('assets/imgs/tik.png')}}" /> Concluído 
+        {% else %}
+            <img src="{{base_url('assets/imgs/nottik.png')}}" /> Não concluído
         {% endif %}
         </span>
     
@@ -16,9 +18,11 @@
         <pre>{{tarefa.texto|e}}</pre>
         <div>
         {% for arq in tarefa.arquivos %}
+            {% if arq.exists %}
             <a target="_BLANK" href="{{base_url()}}{{arq.caminho}}" class="mdl-button mdl-js-button mdl-js-ripple-effect">
                <img src="{{base_url('assets/imgs/')}}{{arq.ext}}.png"> {{arq.nome}}
             </a>
+            {% endif %}
         {% endfor %}
         </div>
     </div>

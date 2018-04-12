@@ -18,27 +18,21 @@ USE `saladeaula`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `tarefas`
+-- Table structure for table `alertas`
 --
 
-DROP TABLE IF EXISTS `tarefas`;
+DROP TABLE IF EXISTS `alertas`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tarefas` (
-  `idtarefa` int(11) NOT NULL AUTO_INCREMENT,
-  `titulo` varchar(245) NOT NULL,
-  `texto` varchar(8000) DEFAULT NULL,
-  `entrega` datetime DEFAULT NULL,
+CREATE TABLE `alertas` (
+  `idalerta` int(11) NOT NULL AUTO_INCREMENT,
+  `idusuario` int(11) NOT NULL,
+  `texto` varchar(345) NOT NULL,
   `data_criado` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `data_atualizado` datetime DEFAULT NULL,
-  `idturma` int(11) NOT NULL,
-  `idprofessor` int(11) NOT NULL,
-  PRIMARY KEY (`idtarefa`),
-  KEY `fk_tarefas_turmas1_idx` (`idturma`),
-  KEY `fk_tarefas_usuarios1_idx` (`idprofessor`),
-  CONSTRAINT `fk_tarefas_turmas1` FOREIGN KEY (`idturma`) REFERENCES `turmas` (`idturma`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tarefas_usuarios1` FOREIGN KEY (`idprofessor`) REFERENCES `usuarios` (`idusuario`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`idalerta`),
+  KEY `idusuario_idx` (`idusuario`),
+  CONSTRAINT `idusuario` FOREIGN KEY (`idusuario`) REFERENCES `usuarios` (`idusuario`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -50,4 +44,4 @@ CREATE TABLE `tarefas` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-04 18:42:47
+-- Dump completed on 2018-04-11 22:17:39

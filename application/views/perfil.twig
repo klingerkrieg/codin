@@ -1,7 +1,7 @@
 {% extends "template/dashboard.html" %}
 
 {% block head %}
-<script src="{{base_url()}}assets/professor.js"></script>
+<script src="{{base_url()}}assets/comum.js"></script>
 {% endblock %}
 
 {% block title %}
@@ -23,12 +23,18 @@
     <div class="mdl-grid demo-content">
         <div class="demo-charts mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
         
-        <form class="mdl-cell mdl-cell--12-col" action="{{base_url('perfil/salvar')}}" method="post" accept-charset="UTF-8" enctype="multipart/form-data">
+        <form id="formPerfil" class="mdl-cell mdl-cell--12-col" action="{{base_url('perfil/salvar')}}" method="post" accept-charset="UTF-8" enctype="multipart/form-data">
                 
+        
         <div class="row">
-            <div class="input-field col s6">
-                Foto do perfil
-                <input id="foto" name="foto" type="file" >
+            <div class="file-field input-field col s12">
+            <div class="btn indigo lighten-1">
+                <span>Foto do perfil</span>
+                <input id="foto" name="foto" type="file">
+            </div>
+            <div class="file-path-wrapper">
+                <input class="file-path validate" type="text">
+            </div>
             </div>
         </div>
         
@@ -41,32 +47,26 @@
 
 
         <div class="row">
-            <div class="input-field col s6">
+            <div class="input-field col s12">
                 <input id="email" name="email" type="email" class="validate" value="{{session.email}}">
                 <label for="email">Email</label>
             </div>            
         </div>
 
-            <div class="row">
-                <div class="input-field col s6">
-                    <input id="reemail" name="reemail" type="email" class="validate">
-                    <label for="reemail">Confirme o email</label>
-                </div>
-            </div>
 
-            <div class="row">
-                <div class="input-field col s6">
-                    <input id="senha" name="senha" type="password" class="validate">
-                    <label for="senha">Senha</label>
-                </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <input id="senha" name="senha" type="password" class="validate">
+                <label for="senha">Senha</label>
             </div>
+        </div>
 
-            <div class="row">
-                <div class="input-field col s6">
-                    <input id="resenha" name="resenha" type="password" class="validate">
-                    <label for="resenha">Confirme a senha</label>
-                </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <input id="resenha" name="resenha" type="password" class="validate">
+                <label for="resenha">Confirme a senha</label>
             </div>
+        </div>
             
 
         <div class="row">

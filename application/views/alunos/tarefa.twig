@@ -71,9 +71,11 @@
             <div class="row">
                 <div class="input-field col s12">
                 {% for arq in arquivos %}
-                <a target="_BLANK" href="{{base_url(arq.caminho)}}" class="mdl-button mdl-js-button mdl-js-ripple-effect left">
-                <img src="{{base_url('assets/imgs/' ~ arq.ext ~ '.png')}}"> {{arq.nome}}
-                </a>
+                    {% if arq.exists %}
+                    <a target="_BLANK" href="{{base_url(arq.caminho)}}" class="mdl-button mdl-js-button mdl-js-ripple-effect left">
+                        <img src="{{base_url('assets/imgs/' ~ arq.ext ~ '.png')}}"> {{arq.nome}}
+                    </a>
+                    {% endif %}
                 {% endfor %}
                 </div>
             </div>
@@ -83,13 +85,14 @@
                         
             <div class="row">
                 <div class="file-field input-field col s12">
-                <div class="btn indigo lighten-1">
-                    <span>Anexar resolução</span>
-                    <input name="arquivo" type="file">
-                </div>
-                <div class="file-path-wrapper">
-                    <input class="file-path validate" type="text">
-                </div>
+                    <div class="btn indigo lighten-1">
+                        <span>Anexar resolução</span>
+                        <input name="arquivo" type="file">                    
+                    </div>
+                    <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text">
+                    </div>
+                    <span class="helper-text">Formatos aceitos: zip, html, xhtml, js, css, jpg, png, gif.</span>
                 </div>
             </div>
 

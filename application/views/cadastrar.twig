@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<form action="{{base_url('login/salvar')}}" method="post" accept-charset="UTF-8">
+<form id="formCadastro" action="{{base_url('login/salvar')}}" method="post" accept-charset="UTF-8">
     
     
   <div class="row">
@@ -11,7 +11,7 @@
     <div class="row">
         <div class="input-field col s12">
         <input id="nome" name="nome" type="text" class="validate">
-        <label for="nome">Nome</label>
+        <label for="nome">Nome *</label>
         </div>
     </div>
 
@@ -19,7 +19,7 @@
     <div class="row">
         <div class="input-field col s12">
         <input id="email" name="email" type="email" class="validate">
-        <label for="email">Email</label>
+        <label for="email">Email *</label>
         </div>
     </div>
 
@@ -27,12 +27,12 @@
     
     <div class="input-field col s12">
         <input id="senha" name="senha" type="password" class="validate">
-        <label for="senha">Senha</label>
+        <label for="senha">Senha *</label>
     </div>
 
     <div class="input-field col s12">
         <input id="resenha" name="resenha" type="password" class="validate">
-        <label for="resenha">Confirme a senha</label>
+        <label for="resenha">Confirme a senha *</label>
     </div>
 
     </div>

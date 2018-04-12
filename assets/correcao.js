@@ -5,13 +5,39 @@ $(function(){
     $('.modal').modal({
         ready:function(){
             $('#texto').focus();
-            
+        },
+        complete:function(){
+            $('#idcorrecao, #linha, #texto').val("");
         }
     });
 
     startCorrectionMode();
 
     atualizarCorrecoes();
+
+
+    $("#formCorrecoes").validate({
+        rules: {
+            texto: {
+				required: true
+            }
+        },
+        //For custom messages
+        messages: {
+            texto: {
+				required: "Digite alguma observação."
+            }
+        },
+        errorElement : 'div',
+        errorPlacement: function(error, element) {
+          var placement = $(element).data('error');
+          if (placement) {
+            $(placement).append(error)
+          } else {
+            error.insertAfter(element);
+          }
+        }
+     });
 });
 
 function setLinha(el){
@@ -42,6 +68,9 @@ function startCorrectionMode(){
 }
 
 function salvarCorrecao(){
+    if (!$("#formCorrecoes").valid()){
+        return;
+    }
     $.ajax({
         method: "POST",
         url: base_url + "/Correcoes/salvar/",
@@ -82,7 +111,7 @@ function atualizarCorrecoes(){
     }).done(function(resp) {
         correcoes = resp;
         //limpa todas
-        $('.correcaoText, maximizeCorrecao').remove();
+        $('.correcaoText, .maximizeCorrecao').remove();
         //atualiza
         for (var i = 0; i < correcoes.length; i++){
             max = $("<img id='max"+i+"' style='display:none;' onclick='maximizeCorrecao("+i+")' class='maximizeCorrecao' src='"+base_url+"assets/imgs/max.png'>");

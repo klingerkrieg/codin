@@ -9,9 +9,6 @@ class Usuario_model extends CI_Model {
 
                 if ($data['senha'] == ""){
                         unset($data['senha']);
-                }
-                if ($data['email'] == ""){
-                        unset($data['senha']);
                 } else {
                         $data['senha'] = sha1($data['senha']);
                 }
@@ -42,30 +39,5 @@ class Usuario_model extends CI_Model {
                 $this->db->select('idusuario, nome, email, is_professor, foto');
                 return $this->db->get_where($this->table,['idusuario'=>$idusuario])->row_array();
         }
-
-        /*
-        
-        public function get_last_ten_entries() {
-                $query = $this->db->get('entries', 10);
-                return $query->result();
-        }
-
-        public function insert_entry()
-        {
-                $this->title    = $_POST['title']; // please read the below note
-                $this->content  = $_POST['content'];
-                $this->date     = time();
-
-                $this->db->insert('entries', $this);
-        }
-
-        public function update_entry()
-        {
-                $this->title    = $_POST['title'];
-                $this->content  = $_POST['content'];
-                $this->date     = time();
-
-                $this->db->update('entries', $this, array('id' => $_POST['id']));
-        }*/
 
 }

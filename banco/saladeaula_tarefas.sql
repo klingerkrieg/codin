@@ -18,24 +18,28 @@ USE `saladeaula`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `usuarios`
+-- Table structure for table `tarefas`
 --
 
-DROP TABLE IF EXISTS `usuarios`;
+DROP TABLE IF EXISTS `tarefas`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `usuarios` (
-  `idusuario` int(11) NOT NULL AUTO_INCREMENT,
-  `nome` varchar(245) NOT NULL,
-  `email` varchar(245) NOT NULL,
-  `senha` varchar(40) NOT NULL,
-  `token` varchar(40) DEFAULT NULL,
-  `is_professor` tinyint(1) NOT NULL DEFAULT '0',
-  `foto` varchar(200) DEFAULT NULL,
+CREATE TABLE `tarefas` (
+  `idtarefa` int(11) NOT NULL AUTO_INCREMENT,
+  `titulo` varchar(245) NOT NULL,
+  `texto` varchar(8000) DEFAULT NULL,
+  `nota_max` float NOT NULL DEFAULT '100',
+  `entrega` datetime DEFAULT NULL,
   `data_criado` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `data_atualizado` datetime DEFAULT NULL,
-  PRIMARY KEY (`idusuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+  `idturma` int(11) NOT NULL,
+  `idprofessor` int(11) NOT NULL,
+  PRIMARY KEY (`idtarefa`),
+  KEY `fk_tarefas_turmas1_idx` (`idturma`),
+  KEY `fk_tarefas_usuarios1_idx` (`idprofessor`),
+  CONSTRAINT `fk_tarefas_turmas1` FOREIGN KEY (`idturma`) REFERENCES `turmas` (`idturma`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tarefas_usuarios1` FOREIGN KEY (`idprofessor`) REFERENCES `usuarios` (`idusuario`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -47,4 +51,4 @@ CREATE TABLE `usuarios` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-04 18:42:48
+-- Dump completed on 2018-04-11 22:17:40

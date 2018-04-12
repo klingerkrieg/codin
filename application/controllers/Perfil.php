@@ -12,7 +12,9 @@ class Perfil extends CI_Controller {
 	public function salvar() {
 
 		$path = saveUploadFile("perfil/{$_SESSION['user']['idusuario']}",'foto');
-		miniImage($path, 200, 200);
+		if ($path != false){
+			miniImage($path, 200, 200);
+		}
 		
 		$this->load->model('Usuario_model');
 		$data = only($_POST,['nome','email','senha']);

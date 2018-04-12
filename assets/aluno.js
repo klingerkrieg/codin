@@ -14,7 +14,62 @@ $(function(){
 
         
 
-    $('.modal').modal();
+    $('.modal').modal({
+        ready:function(){
+            $('#chave').focus();
+            $('#nome').focus();
+        },
+    });
+
+
+    $("#carTurmaForm").validate({
+        rules: {
+            chave: {
+				required: true,
+                minlength: 8
+			}
+        },
+        //For custom messages
+        messages: {
+            chave: {
+				required: "Digite a chave da turma onde você quer entrar.",
+                minlength: "A chave tem 8 dígitos"
+			}
+        },
+        errorElement : 'div',
+        errorPlacement: function(error, element) {
+          var placement = $(element).data('error');
+          if (placement) {
+            $(placement).append(error)
+          } else {
+            error.insertAfter(element);
+          }
+        }
+     });
+
+     $("#respostaForm").validate({
+        rules: {
+            arquivo: {
+				required: true
+			}
+        },
+        //For custom messages
+        messages: {
+            arquivo: {
+				required: "Antes de enviar selecione o arquivo."
+			}
+        },
+        errorElement : 'div',
+        errorPlacement: function(error, element) {
+          var placement = $(element).data('error');
+          if (placement) {
+            $(placement).append(error)
+          } else {
+            error.insertAfter(element);
+          }
+        }
+     });
+     
 });
 
 function entrarTurma(){

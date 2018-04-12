@@ -18,21 +18,24 @@ USE `saladeaula`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `turmas`
+-- Table structure for table `usuarios`
 --
 
-DROP TABLE IF EXISTS `turmas`;
+DROP TABLE IF EXISTS `usuarios`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `turmas` (
-  `idturma` int(11) NOT NULL AUTO_INCREMENT,
-  `nome` varchar(145) NOT NULL,
-  `chave` varchar(8) DEFAULT NULL,
+CREATE TABLE `usuarios` (
+  `idusuario` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` varchar(245) NOT NULL,
+  `email` varchar(245) NOT NULL,
+  `senha` varchar(40) NOT NULL,
+  `token` varchar(40) DEFAULT NULL,
+  `is_professor` tinyint(1) NOT NULL DEFAULT '0',
+  `foto` varchar(200) DEFAULT NULL,
   `data_criado` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `data_atualizado` datetime DEFAULT NULL,
-  PRIMARY KEY (`idturma`),
-  UNIQUE KEY `chave_UNIQUE` (`chave`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`idusuario`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -44,4 +47,4 @@ CREATE TABLE `turmas` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-04 18:42:48
+-- Dump completed on 2018-04-11 22:17:41

@@ -113,9 +113,15 @@ class Tarefas extends CI_Controller {
 	}
 
 	public function excluir($idtarefa){
-
 		$this->load->model('Tarefa_model');
+		$this->load->model('Turma_model');
+
+		$tarefa = $this->Tarefa_model->get($idtarefa);
+		$turma = $this->Turma_model->get($tarefa['idturma']);
+
 		$this->Tarefa_model->excluir($idtarefa);
+
+		print $turma['chave'];
 
 	}
 }

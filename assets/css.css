@@ -86,3 +86,12 @@ pre{
 .left{
     text-align:left;
 }
+
+div.error {
+    position: relative;
+    top: -1rem;
+    left: 0rem;
+    font-size: 0.8rem;
+    color: #FF4081;
+    text-transform: none;
+}

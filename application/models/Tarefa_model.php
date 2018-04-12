@@ -47,7 +47,6 @@ class Tarefa_model extends CI_Model {
         }
 
         
-
         public function getByTurmaProfessor($idturma){
                 //trazer tambem se o aluno já entregou essa tarefa
                 $sql = "select idtarefa, titulo, texto, entrega, idprofessor, idturma, "
@@ -73,12 +72,14 @@ class Tarefa_model extends CI_Model {
                 $this->load->model('Arquivo_model');
                 return $this->Arquivo_model->getByTarefas($tarefas);
         }
+        
+        public function getByTurma($idturma){
+                return $this->db->get_where($this->table, ["idturma"=>$idturma])->result_array();
+        }
 
         public function excluir($idtarefa){
-
                 $this->load->model('Arquivo_model');
 		$this->Arquivo_model->excluirByTarefa($idtarefa);
-
 
                 return $this->db->delete($this->table, ["idtarefa"=>$idtarefa]);
         }

@@ -14,7 +14,12 @@ $.extend($.fn.pickadate.defaults, {
 
 
   $(document).ready(function(){
-    $('.modal').modal();
+    $('.modal').modal({
+        ready:function(){
+            $('#titulo').focus();
+            $('#nome').focus();
+        },
+    });
 
     if ($('#turmas').length > 0)
         listarTurmas();
@@ -47,6 +52,47 @@ $.extend($.fn.pickadate.defaults, {
     });
 
     $('textarea').characterCounter();
+
+
+
+    $("#cadTarefaForm").validate({
+        rules: {
+            titulo: {
+				required: true,
+                minlength: 5
+            },
+            data: {
+                minlength: 10
+            },
+            hora: {
+                minlength: 5
+            }
+        },
+        //For custom messages
+        messages: {
+            titulo: {
+				required: "Digite pelo menos o título da tarefa.",
+                minlength: "Isso lá é título."
+            },
+            data: {
+                minlength: "Digite no formato dd/mm/yyyy."
+            },
+            hora: {
+                minlength: "Digite no formato hh:mm."
+            }
+        },
+        errorElement : 'div',
+        errorPlacement: function(error, element) {
+          var placement = $(element).data('error');
+          if (placement) {
+            $(placement).append(error)
+          } else {
+            error.insertAfter(element);
+          }
+        }
+     });
+
+
         
   });
 
@@ -61,17 +107,21 @@ function listarTurmas(){
 }
 
 function salvarTurma(){
-    
+    if ($('#cadTurmaForm').valid() == false){
+        return;
+    }
+
     $.ajax({
         method: "POST",
         url: base_url + "/turmas/salvar",
-        data: $('#carTurmaForm').serialize()
+        data: $('#cadTurmaForm').serialize()
     }).done(function(resp) {
         listarTurmas();
     });
 
     
-  $('#cadTurma').modal('close');
+    $('#cadTurma').modal('close');
+
   
 }
 
@@ -105,6 +155,10 @@ function excluirTurma(){
 }
 
 function salvarTarefa(){
+    if ($('#cadTarefaForm').valid() == false){
+        return;
+    }
+
     $.ajax({
         method: "POST",
         url: base_url + "/tarefas/salvar",
@@ -136,7 +190,7 @@ function excluirTarefa(){
         if ($('#tarefas').length > 0){
             listarTarefas();
         } else {
-            window.location.reload();
+            window.location = base_url + "/turmas/index/" + resp;
         }
     });
 }

@@ -36,9 +36,9 @@ class Correcoes_model extends CI_Model {
                 return $this->db->get_where($this->table,['idcorrecao'=>$idcorrecao])->row_array();
         }
 
-        public function excluir($data){
+        public function excluir($idcorrecao){
 
-                return $this->db->delete($this->table, ["idcorrecao"=>$data['idcorrecao'],
+                return $this->db->delete($this->table, ["idcorrecao"=>$idcorrecao,
                                                         "idprofessor"=>$_SESSION['user']['idusuario']]);
         }
 
