@@ -11,7 +11,7 @@ class Perfil extends CI_Controller {
 
 	public function salvar() {
 
-		$path = saveUploadFile("perfil/{$_SESSION['user']['idusuario']}",'foto');
+		$path = saveUploadFile("uploads/perfil/{$_SESSION['user']['idusuario']}",'foto');
 		if ($path != false){
 			miniImage($path, 200, 200);
 		}

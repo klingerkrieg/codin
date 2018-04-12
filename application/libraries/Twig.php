@@ -109,8 +109,9 @@ class Twig
 		$this->twig = $twig;
 
 
-
+		global $nomeSistema;
 		$this->twig->addGlobal("session", _v($_SESSION,'user'));
+		$this->twig->addGlobal("nomeSistema", $nomeSistema);
 	}
 
 	protected function setLoader($loader)

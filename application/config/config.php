@@ -1,6 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+global $nomeSistema;
+$nomeSistema = "Codin";
+
 date_default_timezone_set('America/Sao_Paulo');
 /*
 |--------------------------------------------------------------------------

@@ -125,9 +125,6 @@ if(!function_exists('miniImage')){
 if(!function_exists('saveUploadFile')){
   function saveUploadFile($folder,$inputName,$override=false){
     
-    $uploadDir = "uploads/";
-    $folder = $uploadDir . $folder;
-
     #cria o diretório
     if (!file_exists( "$folder/")){
       $allPath =  "$folder/";
@@ -155,7 +152,7 @@ if(!function_exists('saveUploadFile')){
         $try++;
       }
     }
-
+    
     if (move_uploaded_file($_FILES[$inputName]['tmp_name'], $uploadfile)) {
       return $uploadfile;
     } else {

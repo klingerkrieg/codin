@@ -44,8 +44,10 @@
     <link rel="canonical" href="http://www.example.com/">
     -->
 
-    <link href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- link href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en" rel="stylesheet">
+    <!-- link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"-->
+    <link rel="stylesheet" href="{{base_url('assets/icon.css')}}">
+
     <link rel="stylesheet" href="{{template_url()}}material.css">
     <link rel="stylesheet" href="{{template_url()}}styles.css">
     
@@ -78,9 +80,15 @@
   <body>
     <div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
       <header class="demo-header mdl-layout__header mdl-color--grey-100 mdl-color-text--grey-600">
-        <div class="mdl-layout__header-row">
-          <span class="mdl-layout-title">{% block title %}Home{% endblock %}</span>
-          <div class="mdl-layout-spacer"></div>
+        
+            <nav class="mdl-layout__header-row mdl-color--blue-grey-800">
+                <div class="nav-wrapper">
+                    <div class='col s12'>
+                    {% block title %}{% endblock %}
+                  </div>
+                </div>
+            </nav>
+          <!--div class="mdl-layout-spacer"></div>
           <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
             <label class="mdl-button mdl-js-button mdl-button--icon" for="search">
               <i class="material-icons">search</i>
@@ -98,15 +106,17 @@
             <li class="mdl-menu__item">Contact</li>
             <li class="mdl-menu__item">Legal information</li>
           </ul>
-        </div>
+        </div-->
       </header>
       <div class="demo-drawer mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50">
         <header class="demo-drawer-header">
+          <a href="{{base_url('perfil')}}">
           {% if session.foto == "" %}
             <img src="{{template_url()}}images/user.jpg" class="demo-avatar">
           {% else %}
             <img src="{{base_url(session.foto)}}" class="demo-avatar">
           {% endif %}
+          </a>
           <div class="demo-avatar-dropdown">
             <span>{{session.email}}</span>
             <div class="mdl-layout-spacer"></div>
@@ -115,8 +125,8 @@
               <span class="visuallyhidden">Accounts</span>
             </button>
             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="accbtn">
-              <li class="mdl-menu__item"><a href="{{base_url('perfil')}}">Meu perfil</a></li>
-              <li class="mdl-menu__item"><a href="{{base_url('login/logout')}}">Sair</a></li>
+              <li class="mdl-menu__item"><a class="mdl-color-text--blue-grey-800" href="{{base_url('perfil')}}">Meu perfil</a></li>
+              <li class="mdl-menu__item"><a class="mdl-color-text--blue-grey-800" href="{{base_url('login/logout')}}">Sair</a></li>
             </ul>
           </div>
         </header>

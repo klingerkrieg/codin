@@ -25,7 +25,7 @@ class Turma_model extends CI_Model {
         }
 
         public function getAlunos($idturma, $idaluno = null){
-                $sql = "select usuarios.idusuario, nome, email from usuarios "
+                $sql = "select usuarios.idusuario, foto, nome, email from usuarios "
                         ." inner join aluno_turma on "
                         ." usuarios.idusuario = aluno_turma.idusuario "
                         ." where aluno_turma.idturma = $idturma";

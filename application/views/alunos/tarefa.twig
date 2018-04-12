@@ -6,14 +6,12 @@
 
 {% block title %}
 
-<a href="{{base_url('home')}}">Home</a> >> 
-<a href="{{base_url('alunoturma/index/' ~ turma.chave)}}">{{turma.nome|e}}</a>  >> 
-<a href="{{base_url('alunoturma/tarefa/' ~ tarefa.idtarefa)}}">{{tarefa.titulo|e}}</a>
+{% include 'alunos/breadcrumb.html' %}
 
 {% endblock %}
 
 {% block menu_lateral %}
-
+{% include 'alunos/menu_aluno.html' %}
 {% endblock %}
 
 {% block content %}
@@ -55,11 +53,22 @@
         <div class="demo-charts mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
 
         {% if session.errors %}
-            <div class="card-panel white-text orange darken-4">{{session.errors}}</div>
+        <script>
+        $(function(){
+            Materialize.toast( "{{session.errors}}" , 10000);
+        });
+        </script>
         {% endif %}
         
         <form id='respostaForm' method="POST" action="{{base_url('alunoturma/responderTarefa/' ~ tarefa.idtarefa)}}" accept-charset="UTF-8" enctype="multipart/form-data">
 
+
+            <div class="row">
+                <div class="col s12">
+                    <img src="{{base_url(prof.foto)}}" class="demo-avatar">
+                    {{prof.nome}}
+                </div>
+            </div>
 
             <div class="row">
                 <div class="col s12">
@@ -85,9 +94,9 @@
                         
             <div class="row">
                 <div class="file-field input-field col s12">
-                    <div class="btn indigo lighten-1">
+                    <div class="btn mdl-color--blue-grey-600">
                         <span>Anexar resolução</span>
-                        <input name="arquivo" type="file">                    
+                        <input name="arquivo" type="file" multiple>                   
                     </div>
                     <div class="file-path-wrapper">
                         <input class="file-path validate" type="text">
@@ -98,7 +107,7 @@
 
             <div class="row">
                 <div class="input-field col s12">
-                    <button type="submit" class='indigo lighten-1 btn waves-effect waves-green'>Enviar</button>
+                    <button type="submit" class='mdl-color--blue-grey-600 btn waves-effect waves-green'>Enviar</button>
                 </div>
             </div>
 
@@ -125,7 +134,7 @@
                     <img src="{{base_url('assets/imgs/' ~ resp.ext ~ '.png')}}"> {{resp.nome}}
                     </a>
 
-                    <a href="#" onclick="deletarArquivo({{tarefa.idtarefa}},'{{(resp.idarquivo)}}')">
+                    <a href="#confirmExcluirArquivo" class="modal-trigger" onclick="selecionarArquivo({{tarefa.idtarefa}},'{{(resp.idarquivo)}}')">
                         <img src="{{base_url('assets/imgs/delete.png')}}" />
                     </a>
                     
@@ -145,11 +154,11 @@
                         <a href="#" class="mdl-button mdl-js-button mdl-js-ripple-effect tooltipped" data-position="right" data-tooltip="{{resp.data}}">
                             <img src="{{base_url('assets/imgs/' ~ resp.ext ~ '.png')}}"> {{resp.nome}}
                         </a>
-                        <a href="#" onclick="deletarArquivo({{tarefa.idtarefa}},'{{(resp.idarquivo)}}')">
+                        <a href="#confirmExcluirArquivo" class="modal-trigger" onclick="selecionarArquivo({{tarefa.idtarefa}},'{{(resp.idarquivo)}}')">
                             <img src="{{base_url('assets/imgs/delete.png')}}" />
                         </a>
 
-                        
+                     
                     </div>
                 {% endif %}
 
@@ -164,5 +173,17 @@
     </div>
 </main>
 
+
+<div id="confirmExcluirArquivo" class="modal">
+  <div class="modal-content">
+    <h4>Deseja excluir esse arquivo?</h4>
+  </div>
+  <div class="modal-footer">
+      <button type="button" onclick="deletarArquivo()" class='mdl-color--blue-grey-600 btn waves-effect waves-green'>Sim</button>
+      <a href="#!" class="modal-action modal-close mdl-color--blue-grey-600 btn waves-effect waves-green">Não</a>
+  </div>
+</div>
+
+{% include './alunos/entrarEmTurma.html' %}
 
 {% endblock %}

@@ -67,7 +67,7 @@ class Tarefas extends CI_Controller {
 		$data['idprofessor'] = $_SESSION['user']['idusuario'];
 		$idtarefa = $this->Tarefa_model->salvar($data);
 		
-		$path = saveUploadFile($idtarefa, "arquivo", true);
+		$path = saveUploadFile("uploads/".$idtarefa, "arquivo", true);
 		if ($path != false){
 			$this->load->model('Arquivo_model');
 			$data = ['idtarefa'=>$idtarefa, 'do_professor'=>true,

@@ -1,4 +1,6 @@
 var turmaSelected;
+var arquivoSelected;
+var tarefaSelected;
 
 $(function(){
     if ($('#turmas').length > 0)
@@ -12,7 +14,6 @@ $(function(){
         atualizarCorrecoes();
     }
 
-        
 
     $('.modal').modal({
         ready:function(){
@@ -92,6 +93,7 @@ function listarTarefas(){
         url: base_url + "/AlunoTurma/listarTarefas/" + $('#idturma').val()
     }).done(function(resp) {
         $('#tarefas').html(resp);
+        $('.tooltipped').tooltip();
     });
 }
 
@@ -109,13 +111,19 @@ function sairTurma(){
     $('.modal').modal('close');
 }
 
-function deletarArquivo(idtarefa,idarquivo){
+function selecionarArquivo(idtarefa,idarquivo){
+    tarefaSelected = idtarefa;
+    arquivoSelected = idarquivo;
+}
+
+function deletarArquivo(){
     $.ajax({
         method: "POST",
-        url: base_url + "/AlunoTurma/deletarArquivo/"+idtarefa+"/"+idarquivo
+        url: base_url + "/AlunoTurma/deletarArquivo/"+tarefaSelected+"/"+arquivoSelected
     }).done(function(resp) {
         window.location.reload();
     });
+    $('.modal').modal('close');
 }
 
 

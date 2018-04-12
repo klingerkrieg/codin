@@ -33,6 +33,12 @@ class Arquivo_model extends CI_Model {
                 $arr = $this->db->get_where($this->table, $data)->row_array();
                 #pega o conteudo do arquivo
                 $arr['content'] = file_get_contents($arr['caminho']);
+                #se estiver latin1 transforma para utf8
+                $encode = mb_detect_encoding($arr['content'],"UTF-8,ISO-8859-1");
+                if ($encode == "ISO-8859-1"){
+                        $arr['content'] = utf8_encode($arr['content']);
+                }
+                
                 #pega as demais informacoes do arquivo
                 $arr = $this->getFileData($arr, $this->pathHash($arr['idtarefa']));
                 return $arr;
@@ -86,7 +92,7 @@ class Arquivo_model extends CI_Model {
                         if ($path != null){
                                 $path = trim($path, "/");
                                 $path .= "/";
-                                $sql .= " and caminho like '%$path%' ";
+                                $sql .= " and caminho like '%".urldecode($path)."%' ";
                         }
                         
                 } else {
@@ -94,6 +100,8 @@ class Arquivo_model extends CI_Model {
                 }
 
                 $sql .= " order by is_folder desc ";
+
+
 
                 $arquivos = $this->db->query($sql)->result_array();
                 $arquivos = $this->getFilesData($idtarefa, $idaluno, $arquivos);
@@ -213,6 +221,9 @@ class Arquivo_model extends CI_Model {
 
         public function excluir($idtarefa,$idarquivo){
 
+                $this->load->model('Correcoes_model');
+                $this->Correcoes_model->excluirByArquivo($idarquivo);
+
                 $this->db->select('caminho');
                 $rw = $this->db->get_where($this->table,['idarquivo'=>$idarquivo,
                                                    'idtarefa'=>$idtarefa,
@@ -220,7 +231,12 @@ class Arquivo_model extends CI_Model {
                                                 ])->row_array();
                 
                 $sql = "delete from arquivos where "
-                        ." caminho like '{$rw['caminho']}%'";
+                        ." caminho = '{$rw['caminho']}'";
+
+                $this->db->query($sql);
+
+                $sql = "delete from arquivos where "
+                        ." caminho like '{$rw['caminho']}/%'";
 
                 $this->db->query($sql);
         }

@@ -1,0 +1,37 @@
+{% extends "template/login.html" %}
+
+
+
+{% block content %}
+
+<form id="formLogin" action="{{base_url('login/enviarEmail')}}" method="post" accept-charset="UTF-8">
+    
+    
+  <div class="row">
+    <form class="col s12">
+    <div class="row">
+        <div class="input-field col s12">
+        <input id="email" name="email" type="email" class="validate">
+        <label for="email">Email</label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="input-field col s12">
+            <button class='mdl-color--blue-grey-600 btn-large'>Enviar</button>
+            <button type="button" onclick="window.history.back();" class='mdl-color--blue-grey-600 btn-large'>Voltar</button>
+        </div>
+    </div>
+        
+    </form>
+  </div>
+        
+
+    {% if errorMessage is defined %}
+        <p>{{ errorMessage }}</p>
+    {% endif %}
+</form>
+
+
+
+{% endblock %}

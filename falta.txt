@@ -1,20 +1,23 @@
 ﻿ambos
-- foto aluno nas resolucoes
-- foto prof nas tarefas
-- tirar o pesquisar
-- melhorar o breadcrumb
-- criar o recuperar senha
 - melhorar tela inicial
-- botão de voltar na tela de cadastro
-- ao clicar na foto do perfil, mandar para edição do perfil
+
+prof
+- mudar chave
 
 aluno
-- aluno sempre tera botao para entrar em nova turma
-- confirmação antes de excluir arquivo do aluno
-- comentários nas tarefas
+- tabela de arquivos autorelacionada
+- enviar arquivo pra dentro da pasta que esta aberta
 
+- seguranca sql/html/js inject
 
 ---- depois ----
+
+aluno
+- comentários nas tarefas
+- criar pastas
+- editar código
+- criar arquivos
+
 - prof entrar em turma
 - validações JS e PHP
 - Layout no Android

@@ -1,0 +1,14 @@
+{% extends "template/login.html" %}
+
+
+
+{% block content %}
+
+Foi enviado um e-mail de recuperação de senha para: {{email}}
+
+<button type="button" onclick="window.history.back();" class='mdl-color--blue-grey-600 btn-large'>Voltar</button>
+
+<p><a href="{{ base_url('login/password') }}">Esqueci minha senha</a></p>
+
+
+{% endblock %}

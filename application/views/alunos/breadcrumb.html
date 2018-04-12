@@ -1,15 +1,15 @@
-
-
-<a href="{{base_url('home')}}">Home</a>
+<a class="breadcrumb" href="{{base_url('home')}}">Home</a>
 
 {% if turma.nome != "" %}
-    >> <a href="{{base_url('alunoturma/index/' ~ turma.chave)}}">{{turma.nome|e}}</a> 
+    <a class="breadcrumb" href="{{base_url('alunoturma/index/' ~ turma.chave)}}">{{turma.nome|e}}</a> 
 
     {% if tarefa.titulo != "" %}
-        >> <a href="{{base_url('alunoturma/tarefa/' ~ tarefa.idtarefa)}}">{{tarefa.titulo|e}}</a> 
+        <a class="breadcrumb" href="{{base_url('alunoturma/tarefa/' ~ tarefa.idtarefa)}}">{{tarefa.titulo|e}}</a> 
 
         {% if arquivo.idarquivo != "" %}
-            >> <a href="{{base_url('alunoturma/verarquivo/' ~ tarefa.idtarefa ~ '/' ~ arquivo.idarquivo )}}">{{arquivo.nome|e}}</a>
+        <a class="breadcrumb" href="{{base_url('alunoturma/verarquivo/' ~ tarefa.idtarefa ~ '/' ~ arquivo.idarquivo )}}">{{arquivo.nome|e}}</a>
         {% endif %}
     {% endif %}
 {% endif %}
+
+        

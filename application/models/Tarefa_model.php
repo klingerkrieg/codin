@@ -61,11 +61,13 @@ class Tarefa_model extends CI_Model {
         }
 
         public function getByTurmaAluno($idturma){
-                $sql = "select idtarefa, titulo, texto, entrega, idprofessor, idturma, "
+                $sql = "select idtarefa, titulo, texto, entrega, idprofessor, prof.foto as foto_prof, prof.nome as nome_prof, idturma, "
                         ." (select count(distinct idusuario) from arquivos "
                                 ." where idtarefa = tarefas.idtarefa and "
                                 ." do_professor = 0 and arquivos.idusuario = {$_SESSION['user']['idusuario']} ) as concluido "
                         ." from tarefas "
+                        ." inner join usuarios prof on "
+                        ." prof.idusuario = tarefas.idprofessor "
                         ." where idturma = $idturma ";
 
                 $tarefas = $this->db->query($sql)->result_array();
