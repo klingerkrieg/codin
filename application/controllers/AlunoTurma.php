@@ -49,14 +49,17 @@ class AlunoTurma extends CI_Controller {
 
 	public function tarefa($idtarefa){
 
-		$i = 4;
+		/*$i = 4;
 		$path = "";
 		$back = "";
 		while ($this->uri->segment($i) != false){
 			$back = $path;
 			$path .= "/".$this->uri->segment($i);
 			$i++;
-		}
+		}*/
+		
+		$idpasta = $this->uri->segment(4);
+
 		
 		$this->load->model('Tarefa_model');
 		$this->load->model('Turma_model');
@@ -70,12 +73,17 @@ class AlunoTurma extends CI_Controller {
 		$prof		= $this->Usuario_model->get($tarefa['idprofessor']);
 
 		#procura os arquivos do aluno
-		$nivel = max([substr_count($path,"/") - 1, 0]);
+		//$nivel = max([substr_count($path,"/") - 1, 0]);
 		$respostas  = $this->Arquivo_model->getByTarefa($tarefa['idtarefa'],
 														$_SESSION['user']['idusuario'],
-														$nivel, $path);
+														$idpasta);
 		
 		$arquivos  	= $this->Arquivo_model->getByTarefa($tarefa['idtarefa']);
+
+
+		if (count($respostas) > 0){
+			$back = $respostas[0]['back'];
+		}
 
 		$this->twig->display('alunos/tarefa', ['turma'=>$turma,
 												'tarefa'=>$tarefa,

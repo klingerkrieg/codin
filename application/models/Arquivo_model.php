@@ -7,7 +7,21 @@ class Arquivo_model extends CI_Model {
         private $canAccept = ['txt','css','html', 'xhtml','php','json','js','md','java', 'rst',
                                 'png', 'jpg', 'gif', 'jpeg', 'zip'];
 
+        private $pathPartSaveds;
 
+
+
+        public function inserirIfNotExists($data){
+                $rw = $this->db->get_where($this->table,['caminho'=>$data['caminho']])->row_array();
+                if ($rw == false){
+                        return $this->inserir($data);
+                } else {
+                        $this->db->update($this->table,
+                                        ['data_atualizado'=> Date('Y-m-d H:i:s')],
+                                        ["idarquivo"=>$rw['idarquivo']] );
+                        return $rw['idarquivo'];
+                }
+        }
 
 
         public function inserir($data){
@@ -72,13 +86,13 @@ class Arquivo_model extends CI_Model {
                 }
         }
 
-        public function generateRespostaPath($idtarefa){
-                return "./uploads/".$idtarefa."/". $this->pathHash($idtarefa);
+        public function generateRespostaPath($idtarefa, $idusuario = null){
+                return "./uploads/".$idtarefa."/". $this->pathHash($idtarefa, $idusuario);
         }
 
-        public function getByTarefa($idtarefa, $idaluno = null, $nivel = null, $path = null){
+        public function getByTarefa($idtarefa, $idaluno = null, $idpasta = null){
 
-                $sql = "select arquivos.idarquivo, caminho, arquivos.idusuario, "
+                $sql = "select arquivos.idarquivo, idpasta, caminho, arquivos.idusuario, "
                         ." (select count(correcoes.idarquivo) from correcoes where correcoes.idarquivo = arquivos.idarquivo)  as qtd_correcoes,  "
                         ." DATE_FORMAT(ifnull(arquivos.data_atualizado, arquivos.data_criado), '%d/%m/%Y %H:%i:%s') as data "
                         ." from arquivos "
@@ -86,14 +100,20 @@ class Arquivo_model extends CI_Model {
                 
                 if ($idaluno != null){
                         
-                        $sql .= " and nivel = $nivel + (SELECT min(nivel) FROM saladeaula.arquivos where idusuario = $idaluno and idtarefa = $idtarefa) ";
+                        #$sql .= " and nivel = $nivel + (SELECT min(nivel) FROM saladeaula.arquivos where idusuario = $idaluno and idtarefa = $idtarefa) ";
                         $sql .= " and arquivos.idusuario = $idaluno ";
 
-                        if ($path != null){
+                        if ($idpasta == null){
+                                $sql .= " and arquivos.idpasta is null ";
+                        } else {
+                                $sql .= " and arquivos.idpasta = $idpasta ";
+                        }
+
+                        /*if ($path != null){
                                 $path = trim($path, "/");
                                 $path .= "/";
                                 $sql .= " and caminho like '%".urldecode($path)."%' ";
-                        }
+                        }*/
                         
                 } else {
                         $sql .= " and do_professor = 1 ";
@@ -112,18 +132,34 @@ class Arquivo_model extends CI_Model {
         }
 
         public function getFilesData($idtarefa, $idusuario, $arquivos){
-                $hash = $this->pathHash($idtarefa, $idusuario);
+                #$hash = $this->pathHash($idtarefa, $idusuario);
+                $pathHash = $this->generateRespostaPath($idtarefa, $idusuario);
                 for ($y = 0; $y < sizeof($arquivos); $y++){
-                        $arquivos[$y] = $this->getFileData($arquivos[$y],$hash);
+                        $arquivos[$y] = $this->getFileData($arquivos[$y],$pathHash);
                 }
                 return $arquivos;
         }
 
-        public function getFileData($arq,$hash){
+        public function getFileData($arq,$pathHash){
+
+                $rw['idpasta'] = $arq['idpasta'];
+                $arq['back'] = -1;
+                $rlPath = "";
+                //constroi o caminho completo até o arquivo
+                while ($rw['idpasta'] != null){
+                        $this->db->select("caminho, idpasta");
+                        $rw = $this->db->get_where($this->table,['idarquivo'=>$rw['idpasta']])->row_array();
+                        $rlPath = "/". $rw['caminho'] . $rlPath;
+                        if ($arq['back'] == -1){
+                                $arq['back'] = $rw['idpasta'];
+                        }
+                }
 
                 $arq['nome'] = getEnds($arq['caminho'],"/");
                 $arq['ext'] = "folder";
-                $arq['caminho_exec'] = "/".substr($arq['caminho'], strpos($arq['caminho'],$hash));
+                //$arq['caminho_exec'] = "/".substr($arq['caminho'], strpos($arq['caminho'],$hash));
+                $arq['caminho_exec'] = "/".$arq['caminho'];
+                $arq['caminho'] = $pathHash . $rlPath . $arq['caminho_exec'];
                 $arq['exists'] = true;
                 if (is_file($arq['caminho'])){
                         $arq['ext'] = strtolower(getEnds($arq['caminho'],"."));
@@ -137,6 +173,9 @@ class Arquivo_model extends CI_Model {
                         $arq['exists'] = false;
                 }
 
+                /*print "<pre>";
+                print_r($arq);
+                die();*/
                 return $arq;
         }
 
@@ -184,37 +223,42 @@ class Arquivo_model extends CI_Model {
         }
 
         public function uploadFiles($idtarefa, $keyFile, $override=false){
-                $path = $this->generateRespostaPath($idtarefa);
+                $pathHash = $this->generateRespostaPath($idtarefa);
 		
-		$path = saveUploadFile($path, $keyFile, $override);
+		$path = saveUploadFile($pathHash, $keyFile, $override);
                 
-		$files = unzip($path);
+                $files = unzip($path);
+                
 		if (sizeof($files) > 0){
                         
                         foreach($files as $file) {
 
                                 if ($this->checkSecurity($file)){
                                         $file = str_replace("//","/",str_replace("\\","/",trim($file,"/")));
+                                        //remover uploads/idtarefa/hash
+                                        $file = trim(str_replace(trim($pathHash,"./"),"",$file),"/");
 
-                                        $rw = $this->db->get_where($this->table,['caminho'=>$file])->row_array();
-
-                                        #só reinsere no banco caso não exista
-                                        //if (sizeof($rw) == 0){
-                                        if ( $rw == false ){
+                                        $entirePath = ".";
+                                        $prevId = null;
+                                        
+                                        foreach( explode("/", $file) as $pathPart ){
+                                                
+                                                $entirePath .= "/". $pathPart;
+                                                $isFolder = !is_file($pathHash.$entirePath);
                                                 $data = ['idtarefa'=>$idtarefa, 'do_professor'=>false,
-                                                        'caminho'=>$file, 'idusuario'=>$_SESSION['user']['idusuario'],
-                                                        'nivel'=>substr_count($file,"/"),
-                                                        'is_folder'=>!is_file($file)];
-                                                $this->inserir($data);
-                                        } else {
-                                                #se ja existir apenas atualiza a hora
-                                                $this->db->update($this->table,
-                                                                ['data_atualizado'=> Date('Y-m-d H:i:s')],
-                                                                ["idarquivo"=>$rw['idarquivo']] );
+                                                        'caminho'=>$pathPart, 'idusuario'=>$_SESSION['user']['idusuario'],
+                                                        //'nivel'=>substr_count($file,"/"),
+                                                        'idpasta'=> $prevId,
+                                                        'is_folder'=>$isFolder];
+                                                
+                                                $prevId = $this->inserirIfNotExists($data);
+                                                
                                         }
+                                        
                                 }
                                 
                         }
+                        
 		}
         }
 

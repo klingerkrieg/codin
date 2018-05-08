@@ -49,7 +49,11 @@ if(!function_exists('date_mysql_to_br')){
 
 if(!function_exists('getEnds')){
   function getEnds($str,$token) {
-    return substr($str,strrpos($str,$token)+1);
+    if (substr_count($str,$token) > 0){
+      return substr($str,strrpos($str,$token)+1);
+    } else {
+      return $str;
+    }
   }
 }
 
@@ -170,12 +174,17 @@ if(!function_exists('unzip')){
       return $files;
     }
 
+    $mainPath = substr($_SERVER['SCRIPT_FILENAME'],0,strrpos($_SERVER['SCRIPT_FILENAME'],"index.php"));
+
     $path = pathinfo(realpath($file), PATHINFO_DIRNAME);
     $path = str_replace("\\","/",$path);
 
     #adiciona o proprio arquivo
     $file = str_replace("\\","/",realpath($file));
-    array_push($files, $file);
+    $fileRelPath = str_replace($mainPath,"",$file);
+    array_push($files, $fileRelPath);
+
+    
 
     if ( strtolower(getEnds($file,".")) == "zip") {
       $zip = new ZipArchive;
@@ -185,6 +194,8 @@ if(!function_exists('unzip')){
         $zip->extractTo($path);
         //lista os arquivos presentes no zip
         for($i = 0; $i < $zip->numFiles; $i++) {
+          //$path = substr($path, strlen($_SERVER['DOCUMENT_ROOT']));
+          $path = str_replace($mainPath,"",$path);
           array_push($files, $path."/".$zip->getNameIndex($i));
         }
         $zip->close();

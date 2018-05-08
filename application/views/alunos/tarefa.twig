@@ -114,8 +114,8 @@
             <div class="row">
                 <div class="input-field col s12">
 
-                {% if voltar %}
-                    <a href="{{base_url('alunoturma/tarefa/' ~ tarefa.idtarefa ~ voltar)}}" class="mdl-button mdl-js-button mdl-js-ripple-effect">
+                {% if voltar != -1 %}
+                    <a href="{{base_url('alunoturma/tarefa/' ~ tarefa.idtarefa ~ '/' ~ voltar)}}" class="mdl-button mdl-js-button mdl-js-ripple-effect">
                         <img src="{{base_url('assets/imgs/back_folder.png')}}"> ..
                     </a>
                 {% endif %}
@@ -126,9 +126,9 @@
                 {% if resp.exists %}
                     <div>
                     {% if resp.ext == "folder" %}
-                        <a href="{{base_url("alunoturma/tarefa/" ~ tarefa.idtarefa ~ resp.caminho_exec)}}" class="mdl-button mdl-js-button mdl-js-ripple-effect tooltipped" data-position="right" data-tooltip="{{resp.data}}">
+                        <a href="{{base_url("alunoturma/tarefa/" ~ tarefa.idtarefa ~ '/' ~ resp.idarquivo)}}" class="mdl-button mdl-js-button mdl-js-ripple-effect tooltipped" data-position="right" data-tooltip="{{resp.data}}">
                     {% else %}
-                        <a target="_BLANK" href="{{base_url('uploads/' ~ tarefa.idtarefa ~ resp.caminho_exec)}}" class="mdl-button mdl-js-button mdl-js-ripple-effect tooltipped" data-position="right" data-tooltip="{{resp.data}}">
+                        <a target="_BLANK" href="{{base_url('uploads/' ~ tarefa.idtarefa ~ '/' ~ resp.idarquivo)}}" class="mdl-button mdl-js-button mdl-js-ripple-effect tooltipped" data-position="right" data-tooltip="{{resp.data}}">
                     {% endif %}
 
                     <img src="{{base_url('assets/imgs/' ~ resp.ext ~ '.png')}}"> {{resp.nome}}

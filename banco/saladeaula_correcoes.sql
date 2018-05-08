@@ -37,7 +37,7 @@ CREATE TABLE `correcoes` (
   KEY `professor_idx` (`idprofessor`),
   CONSTRAINT `correcaoArquivo` FOREIGN KEY (`idarquivo`) REFERENCES `arquivos` (`idarquivo`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `professor` FOREIGN KEY (`idprofessor`) REFERENCES `usuarios` (`idusuario`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -49,4 +49,4 @@ CREATE TABLE `correcoes` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-11 22:17:39
+-- Dump completed on 2018-05-08 10:16:09

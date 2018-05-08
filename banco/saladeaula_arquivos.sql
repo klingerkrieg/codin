@@ -26,6 +26,7 @@ DROP TABLE IF EXISTS `arquivos`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `arquivos` (
   `idarquivo` int(11) NOT NULL AUTO_INCREMENT,
+  `idpasta` int(11) DEFAULT NULL,
   `caminho` varchar(245) NOT NULL,
   `nivel` int(11) DEFAULT NULL,
   `is_folder` tinyint(4) DEFAULT NULL,
@@ -39,7 +40,7 @@ CREATE TABLE `arquivos` (
   KEY `fk_arquivos_usuarios1_idx` (`idusuario`),
   CONSTRAINT `fk_arquivos_tarefas1` FOREIGN KEY (`idtarefa`) REFERENCES `tarefas` (`idtarefa`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_arquivos_usuarios1` FOREIGN KEY (`idusuario`) REFERENCES `usuarios` (`idusuario`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4296 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -51,4 +52,4 @@ CREATE TABLE `arquivos` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-11 22:17:39
+-- Dump completed on 2018-05-08 10:16:10
