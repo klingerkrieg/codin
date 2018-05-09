@@ -12,25 +12,13 @@ class Tarefas extends CI_Controller {
 
 	public function index($idtarefa, $idaluno=null){
 
-		$i = 5;
-		$path = "";
-		$back = "";
-		while ($this->uri->segment($i) != false){
-			$back = $path;
-			$path .= "/".$this->uri->segment($i);
-			$i++;
-		}
-		$back = "/$idaluno" . $back;
-		if (substr_count($back,"/") < 2){
-			$back = "";
-		} else
-		if (substr_count($back,"/") == 2){
-			$back = "/";
-		}
+
 		
-		
-		#procura os arquivos do aluno
-		$nivel = max([substr_count($path,"/") - 1, 0]);
+		$idpasta = $this->uri->segment(5);
+		//anula a chave do aluno para exibir todos os alunos ao clicar na pasta de voltar
+		if ($idpasta == ""){
+			$idaluno = null;
+		}
 
 
 		$this->load->model('Tarefa_model');
@@ -47,8 +35,14 @@ class Tarefas extends CI_Controller {
 		$alunos 	= $this->Arquivo_model->getByAlunos($tarefa['idtarefa'],
 														$alunos, 
 														$idaluno,
-														$nivel, $path);
+														$idpasta);
+
 		$alunos 	= $this->Nota_model->getByAlunos($idtarefa,$alunos);
+
+		$back = -1;
+		if (count($alunos) > 0 && count($alunos[0]['respostas']) > 0){
+			$back = $alunos[0]['respostas'][0]['back'];
+		}
 
 
 		$this->twig->display('professores/tarefa', ['turma'=>$turma,
@@ -66,15 +60,10 @@ class Tarefas extends CI_Controller {
 		$data = only($_POST,['idtarefa','titulo','data','hora','texto','idturma']);
 		$data['idprofessor'] = $_SESSION['user']['idusuario'];
 		$idtarefa = $this->Tarefa_model->salvar($data);
-		
-		$path = saveUploadFile("uploads/".$idtarefa, "arquivo", true);
-		if ($path != false){
-			$this->load->model('Arquivo_model');
-			$data = ['idtarefa'=>$idtarefa, 'do_professor'=>true,
-					'caminho'=>$path, 'idusuario'=>$_SESSION['user']['idusuario']];
-			$this->Arquivo_model->inserir($data);
-		}
 
+		$this->load->model('Arquivo_model');
+		$this->Arquivo_model->uploadFiles($idtarefa,"arquivo",true);
+		
 		print $idtarefa;
 	}
 

@@ -128,7 +128,7 @@
                     {% if resp.ext == "folder" %}
                         <a href="{{base_url("alunoturma/tarefa/" ~ tarefa.idtarefa ~ '/' ~ resp.idarquivo)}}" class="mdl-button mdl-js-button mdl-js-ripple-effect tooltipped" data-position="right" data-tooltip="{{resp.data}}">
                     {% else %}
-                        <a target="_BLANK" href="{{base_url('uploads/' ~ tarefa.idtarefa ~ '/' ~ resp.idarquivo)}}" class="mdl-button mdl-js-button mdl-js-ripple-effect tooltipped" data-position="right" data-tooltip="{{resp.data}}">
+                        <a target="_BLANK" href="{{base_url(resp.caminho)}}" class="mdl-button mdl-js-button mdl-js-ripple-effect tooltipped" data-position="right" data-tooltip="{{resp.data}}">
                     {% endif %}
 
                     <img src="{{base_url('assets/imgs/' ~ resp.ext ~ '.png')}}"> {{resp.nome}}

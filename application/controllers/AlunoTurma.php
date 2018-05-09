@@ -49,14 +49,6 @@ class AlunoTurma extends CI_Controller {
 
 	public function tarefa($idtarefa){
 
-		/*$i = 4;
-		$path = "";
-		$back = "";
-		while ($this->uri->segment($i) != false){
-			$back = $path;
-			$path .= "/".$this->uri->segment($i);
-			$i++;
-		}*/
 		
 		$idpasta = $this->uri->segment(4);
 
@@ -80,7 +72,7 @@ class AlunoTurma extends CI_Controller {
 		
 		$arquivos  	= $this->Arquivo_model->getByTarefa($tarefa['idtarefa']);
 
-
+		$back = -1;
 		if (count($respostas) > 0){
 			$back = $respostas[0]['back'];
 		}
