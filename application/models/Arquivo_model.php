@@ -12,7 +12,12 @@ class Arquivo_model extends CI_Model {
 
 
         public function inserirIfNotExists($data){
-                $rw = $this->db->get_where($this->table,['caminho'=>$data['caminho']])->row_array();
+                $rw = $this->db->get_where($this->table,['caminho'=>$data['caminho'],
+                                                        'idtarefa'=>$data['idtarefa'],
+                                                        'idusuario'=>$data['idusuario'],
+                                                        'idpasta'=>$data['idpasta']])->row_array();
+
+
                 if ($rw == false){
                         return $this->inserir($data);
                 } else {
@@ -42,19 +47,21 @@ class Arquivo_model extends CI_Model {
                 }
 
 
-                $this->db->select("idarquivo, idpasta, idtarefa, caminho, idusuario, DATE_FORMAT(ifnull(data_atualizado, data_criado), '%d/%m/%Y %H:%i:%s') as data");
+                $this->db->select("idarquivo, idpasta, idtarefa, is_folder, caminho, idusuario, DATE_FORMAT(ifnull(data_atualizado, data_criado), '%d/%m/%Y %H:%i:%s') as data");
 
                 $arr = $this->db->get_where($this->table, $data)->row_array();
                 
                 #pega as demais informacoes do arquivo
                 $arr = $this->getFileData($arr, $this->generateRespostaPath($arr['idtarefa'], $arr['idusuario']));
                 
-                #pega o conteudo do arquivo
-                $arr['content'] = file_get_contents($arr['caminho']);
-                #se estiver latin1 transforma para utf8
-                $encode = mb_detect_encoding($arr['content'],"UTF-8,ISO-8859-1");
-                if ($encode == "ISO-8859-1"){
-                        $arr['content'] = utf8_encode($arr['content']);
+                if (is_file($arr['caminho'])){
+                        #pega o conteudo do arquivo
+                        $arr['content'] = file_get_contents($arr['caminho']);
+                        #se estiver latin1 transforma para utf8
+                        $encode = mb_detect_encoding($arr['content'],"UTF-8,ISO-8859-1");
+                        if ($encode == "ISO-8859-1"){
+                                $arr['content'] = utf8_encode($arr['content']);
+                        }
                 }
                 
                 return $arr;
@@ -218,19 +225,30 @@ class Arquivo_model extends CI_Model {
                 return true;
         }
 
-        public function uploadFiles($idtarefa, $keyFile, $override=false){
+        public function uploadFiles($idtarefa, $keyFile, $override=false, $idpasta){
+
                 
+
                 if ($_SESSION['user']['is_professor']){
                         $pathHash = "uploads/".$idtarefa;
                 } else {
-                        $pathHash = $this->generateRespostaPath($idtarefa, $idusuario);
+                        $pathHash = $this->generateRespostaPath($idtarefa, $_SESSION['user']['idusuario']);
+                }
+
+                #se tiver sido feito o upload para uma pasta específica
+                $insideFolder = "";
+                if ($idpasta != null){
+                        $pasta = $this->get($idpasta);
+                        if ($pasta['is_folder'] && $pasta['idusuario'] == $_SESSION['user']['idusuario']){
+                                $insideFolder = str_replace($pathHash,"",$pasta['caminho'] . "/");
+                        }
                 }
                 
-                $path = saveUploadFile($pathHash, $keyFile, $override);
-                
+                #salva o arquivo em disco
+                $path = saveUploadFile($pathHash . $insideFolder, $keyFile, $override);
+                #caso esteja zipado extrai e retorna uma lista com os arquivos
                 $files = unzip($path);
 
-                
 		if (sizeof($files) > 0){
                         
                         foreach($files as $file) {
@@ -245,17 +263,17 @@ class Arquivo_model extends CI_Model {
 
                                         $entirePath = ".";
                                         $prevId = null;
-                                        print $file;
                                         foreach( explode("/", $file) as $pathPart ){
                                                 
                                                 $entirePath .= "/". $pathPart;
                                                 $isFolder = !is_file($pathHash.$entirePath);
-                                                $data = ['idtarefa'=>$idtarefa, 'do_professor'=>$_SESSION['user']['is_professor'],
-                                                        'caminho'=>$pathPart, 'idusuario'=>$_SESSION['user']['idusuario'],
-                                                        //'nivel'=>substr_count($file,"/"),
-                                                        'idpasta'=> $prevId,
-                                                        'is_folder'=>$isFolder];
-                                                print_r($data);
+                                                $data = ['idtarefa'     =>$idtarefa,
+                                                        'do_professor'  =>$_SESSION['user']['is_professor'],
+                                                        'caminho'       =>$pathPart,
+                                                        'idusuario'     =>$_SESSION['user']['idusuario'],
+                                                        'idpasta'       =>$prevId,
+                                                        'is_folder'     =>$isFolder];
+                                                
                                                 $prevId = $this->inserirIfNotExists($data);
                                                 
                                         }
@@ -270,24 +288,23 @@ class Arquivo_model extends CI_Model {
 
         public function excluir($idtarefa,$idarquivo){
 
+                #deleta todas as correções do arquivo em questão
                 $this->load->model('Correcoes_model');
                 $this->Correcoes_model->excluirByArquivo($idarquivo);
 
-                $this->db->select('caminho');
-                $rw = $this->db->get_where($this->table,['idarquivo'=>$idarquivo,
+                $this->db->select('idarquivo');
+                $rw = $this->db->get_where($this->table,['idpasta'=>$idarquivo,
                                                    'idtarefa'=>$idtarefa,
                                                    'idusuario'=>$_SESSION['user']['idusuario'],
-                                                ])->row_array();
+                                                ])->result_array();
                 
-                $sql = "delete from arquivos where "
-                        ." caminho = '{$rw['caminho']}'";
+                #deleta recursivamente todos os arquivos que estão dentro desta pasta(se for uma pasta)
+                foreach($rw as $arq){
+                        $this->excluir($idtarefa,$arq['idarquivo']);
+                }
 
-                $this->db->query($sql);
-
-                $sql = "delete from arquivos where "
-                        ." caminho like '{$rw['caminho']}/%'";
-
-                $this->db->query($sql);
+                #deleta o arquivo
+                $this->db->delete($this->table,['idarquivo'=>$idarquivo]);
         }
 
 

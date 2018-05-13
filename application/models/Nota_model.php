@@ -5,6 +5,11 @@ class Nota_model extends CI_Model {
         private $table = 'notas';
 
         public function salvar($data){
+                //Caso a nota venha em branco ele deleta
+                if ($data['nota'] == ""){
+                        $where = only($data,['idtarefa','idaluno']);
+                        $this->db->delete($this->table,$where);
+                } else
                 if ($this->get($data['idtarefa'],$data['idaluno']) == ""){
                         $data['data_criado'] = Date('Y-m-d H:i:s');
                         $this->db->insert($this->table,$data);

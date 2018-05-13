@@ -83,17 +83,18 @@ class AlunoTurma extends CI_Controller {
 												"arquivos"=>$arquivos,
 												"voltar"=>$back,
 												"nota"=>$nota,
+												"pasta"=>$idpasta,
 												"prof"=>$prof]);
 
 		$_SESSION['user']['errors'] = "";
 	}
 
-	public function responderTarefa($idtarefa){
+	public function responderTarefa($idtarefa, $idpasta=null){
 		$this->load->model('Arquivo_model');
 
-		$this->Arquivo_model->uploadFiles($idtarefa, "arquivo", true);
+		$this->Arquivo_model->uploadFiles($idtarefa, "arquivo", true, $idpasta);
 		
-		Header('Location:' . base_url("alunoturma/tarefa/$idtarefa"));
+		Header('Location:' . base_url("alunoturma/tarefa/$idtarefa/$idpasta#expl"));
 	}
 
 	function deletarArquivo($idtarefa,$idarquivo){

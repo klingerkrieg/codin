@@ -37,7 +37,7 @@ hr {
 
 .correcaoText{
     background-color:yellow;
-    position: fixed;
+    position: relative;
     text-shadow: none;
     border-radius: 3px;
     padding-left:3px;

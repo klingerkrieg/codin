@@ -3,17 +3,18 @@
 
 prof
 - mudar chave
+- excluir arquivos da tarefa (do professor)
+- comparar exercícios entregues
+- habilitar Java
+- download de todas as resoluções
+ - download por resolução
 
-aluno
-- tabela de arquivos autorelacionada
-- enviar arquivo pra dentro da pasta que esta aberta
-
-- seguranca sql/html/js inject
 
 ---- depois ----
 
 aluno
 - comentários nas tarefas
+- mensagens para alunos
 - criar pastas
 - editar código
 - criar arquivos

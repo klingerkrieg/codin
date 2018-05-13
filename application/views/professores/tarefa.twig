@@ -73,7 +73,7 @@
                 <div class="input-field col s12">
 
                 {% if voltar != -1 %}
-                    <a href="{{base_url('tarefas/index/' ~ tarefa.idtarefa ~ '/' ~ aluno.idusuario ~ '/' ~  voltar)}}" class="mdl-button mdl-js-button mdl-js-ripple-effect">
+                    <a href="{{base_url('tarefas/index/' ~ tarefa.idtarefa ~ '/' ~ aluno.idusuario ~ '/' ~  voltar ~ '#expl')}}" class="mdl-button mdl-js-button mdl-js-ripple-effect">
                         <img src="{{base_url('assets/imgs/back_folder.png')}}"> ..
                     </a>
                 {% endif %}
@@ -81,7 +81,7 @@
                 {% for resp in aluno.respostas %}
                     <div>
                     {% if resp.ext == "folder" %}
-                        <a href="{{base_url("tarefas/index/" ~ tarefa.idtarefa ~ "/" ~ resp.idusuario ~ '/' ~ resp.idarquivo )}}" class="mdl-button mdl-js-button mdl-js-ripple-effect tooltipped" data-position="right" data-tooltip="{{resp.data}}">
+                        <a href="{{base_url("tarefas/index/" ~ tarefa.idtarefa ~ "/" ~ resp.idusuario ~ '/' ~ resp.idarquivo ~ '#expl' )}}" class="mdl-button mdl-js-button mdl-js-ripple-effect tooltipped" data-position="right" data-tooltip="{{resp.data}}">
                     {% else %}
                         <a target="_BLANK" href="{{base_url(resp.caminho)}}" class="mdl-button mdl-js-button mdl-js-ripple-effect tooltipped" data-position="right" data-tooltip="{{resp.data}}">
                     {% endif %}
@@ -98,9 +98,12 @@
                     {% if resp.qtd_correcoes > 0 %}
                         <span class='lime lighten-2 qtdCorrecoes'>{{resp.qtd_correcoes}}</span>
                     {% endif %}
+
+                    <a name="expl"></a>
                     </div>
                 {% endfor %}
                 
+                    
                 </div>
             </div> 
             </div>

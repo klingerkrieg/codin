@@ -53,7 +53,8 @@ class Tarefa_model extends CI_Model {
                         ." (select count(*) from aluno_turma where idturma = tarefas.idturma) as qtd_alunos, "
                         ." (select count(distinct idusuario) from arquivos where idtarefa = tarefas.idtarefa and do_professor = 0) as qtd_concluidos "
                         ." from tarefas "
-                        ."  where idturma = $idturma ";
+                        ."  where idturma = $idturma "
+                        ." order by idtarefa desc ";
 
                 $tarefas = $this->db->query($sql)->result_array();
                 $this->load->model('Arquivo_model');
@@ -68,7 +69,8 @@ class Tarefa_model extends CI_Model {
                         ." from tarefas "
                         ." inner join usuarios prof on "
                         ." prof.idusuario = tarefas.idprofessor "
-                        ." where idturma = $idturma ";
+                        ." where idturma = $idturma "
+                        ." order by idtarefa desc ";
 
                 $tarefas = $this->db->query($sql)->result_array();
                 $this->load->model('Arquivo_model');
