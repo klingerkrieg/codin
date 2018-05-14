@@ -59,7 +59,12 @@
             <div>
             <div class="row">
                 <div class="input-field col s12">
-                    <h5><img class='demo-avatar' src="{{base_url(aluno.foto)}}"> {{aluno.nome|e}}&lt;{{aluno.email|e}}&gt;</h5>
+                    <h5>
+                        <img class='demo-avatar' src="{{base_url(aluno.foto)}}"> {{aluno.nome|e}}&lt;{{aluno.email|e}}&gt;
+                        {% if aluno.respostas %}
+                        <a href='{{base_url("tarefas/download/" ~ tarefa.idtarefa ~ "/" ~ aluno.idusuario)}}' class="mdl-color--blue-grey-600 btn waves-effect waves-green">Download da resolução</a>
+                        {% endif %}
+                    </h5>
                 </div>
             </div>
             <div class="row">

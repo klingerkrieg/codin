@@ -165,6 +165,51 @@ if(!function_exists('saveUploadFile')){
   }
 }
 
+if (!function_exists('getFilesFromPath')){
+  function getFilesFromPath($path){
+    $handle = opendir($path);
+    $arr = array();
+    while (false !== $f = readdir($handle)) {
+      if ($f != '.' && $f != '..') { 
+        
+        $filePath = $path."/".$f;
+        if (is_file($filePath)){
+          array_push($arr,$filePath);
+        } else {
+          $arr = array_merge($arr,getFilesFromPath($filePath));
+        }
+      }
+    }
+    return $arr;
+  }
+}
+
+
+if (!function_exists('zip')){
+  function zip($path,$destination=null){
+    $zip = new ZipArchive;
+
+    if ($destination == null){
+      $fileName = substr($path, strrpos(trim($path,"/"),"/")+1);
+      $destination = str_replace("\\","/",sys_get_temp_dir())."/$fileName.zip";
+    }
+    
+    if ($zip->open($destination, ZIPARCHIVE::CREATE) === TRUE) {
+
+      $files = getFilesFromPath($path);
+      foreach($files as $file){
+        $fileName = str_replace($path."/","",$file);
+        $zip->addFile($file,$fileName);
+      }
+      
+      $zip->close();
+      return $destination;
+    } else {
+      return null;
+    }
+  }
+}
+
 
 if(!function_exists('unzip')){
   function unzip($file){

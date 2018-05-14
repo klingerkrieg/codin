@@ -7,7 +7,6 @@ prof
 - comparar exercícios entregues
 - habilitar Java
 - download de todas as resoluções
- - download por resolução
 
 
 ---- depois ----

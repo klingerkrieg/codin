@@ -308,4 +308,15 @@ class Arquivo_model extends CI_Model {
         }
 
 
+        public function makeDownload($idtarefa,$idaluno){
+                $pathHash = $this->generateRespostaPath($idtarefa,$idaluno);
+                $this->db->select("nome");
+                #cria com o nome do aluno
+                $rw = $this->db->get_where("usuarios",["idusuario"=>$idaluno])->row_array();
+                $destination = str_replace("\\","/",sys_get_temp_dir())."/{$rw['nome']}.zip";
+                #retorna o endereco do zip
+                return zip($pathHash, $destination);
+        }
+
+
 }

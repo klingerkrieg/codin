@@ -113,4 +113,25 @@ class Tarefas extends CI_Controller {
 		print $turma['chave'];
 
 	}
+
+
+	public function download($idtarefa, $idaluno){
+		#cria o zip
+		$this->load->model('Arquivo_model');
+		$path = $this->Arquivo_model->makeDownload($idtarefa, $idaluno);
+		$fileName = substr($path, strrpos($path,"/")+1);
+
+		#faz o download do zip
+		header('Content-Type: application/zip');
+		header('Content-Disposition: attachment; filename="'.basename($fileName).'"');
+		header('Content-Length: ' . filesize($path));
+		header("Content-Transfer-Encoding: binary");
+		header("Pragma: no-cache"); 
+		header("Expires: 0"); 
+		ob_clean();
+		flush();
+		readfile($path);
+		#deleta o zip
+		unlink($path);
+	}
 }
