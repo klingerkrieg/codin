@@ -115,7 +115,7 @@ class Tarefas extends CI_Controller {
 	}
 
 
-	public function download($idtarefa, $idaluno){
+	public function download($idtarefa, $idaluno=null){
 		#cria o zip
 		$this->load->model('Arquivo_model');
 		$path = $this->Arquivo_model->makeDownload($idtarefa, $idaluno);

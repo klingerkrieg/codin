@@ -93,6 +93,7 @@ class AlunoTurma extends CI_Controller {
 		$this->load->model('Arquivo_model');
 
 		$this->Arquivo_model->uploadFiles($idtarefa, "arquivo", true, $idpasta);
+		$this->Arquivo_model->createAlunoInfo($idtarefa);
 		
 		Header('Location:' . base_url("alunoturma/tarefa/$idtarefa/$idpasta#expl"));
 	}

@@ -30,6 +30,8 @@
                 <div class="input-field col s12">
                     <a href="#cadTarefa"            onclick="editarTarefa({{tarefa.idtarefa}});" class="mdl-button mdl-js-button mdl-js-ripple-effect modal-trigger">Editar</a>
                     <a href="#confirmDeleteTarefa"  onclick="selectTarefa({{tarefa.idtarefa}})" class="mdl-button mdl-js-button mdl-js-ripple-effect modal-trigger">Excluir</a>
+                    <a href='{{base_url("tarefas/download/" ~ tarefa.idtarefa ~ "/")}}' class="mdl-button mdl-js-button mdl-js-ripple-effect modal-trigger">Download das resoluções {{tarefa.qtd_concluidos}}/{{tarefa.qtd_alunos}}</a>
+                    
                 </div>
             </div>
 
@@ -62,7 +64,7 @@
                     <h5>
                         <img class='demo-avatar' src="{{base_url(aluno.foto)}}"> {{aluno.nome|e}}&lt;{{aluno.email|e}}&gt;
                         {% if aluno.respostas %}
-                        <a href='{{base_url("tarefas/download/" ~ tarefa.idtarefa ~ "/" ~ aluno.idusuario)}}' class="mdl-color--blue-grey-600 btn waves-effect waves-green">Download da resolução</a>
+                        <a href='{{base_url("tarefas/download/" ~ tarefa.idtarefa ~ "/" ~ aluno.idusuario)}}' class="mdl-button mdl-js-button mdl-js-ripple-effect modal-trigger">Download da resolução</a>
                         {% endif %}
                     </h5>
                 </div>

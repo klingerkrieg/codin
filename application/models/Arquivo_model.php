@@ -225,6 +225,14 @@ class Arquivo_model extends CI_Model {
                 return true;
         }
 
+        public function createAlunoInfo($idtarefa){
+                $pathHash = $this->generateRespostaPath($idtarefa, $_SESSION['user']['idusuario']);
+                $f = fopen($pathHash."/aluno-info.txt",'w');
+                fwrite($f,"id:\t".$_SESSION['user']['idusuario']."\r\n");
+                fwrite($f,"nome:\t".$_SESSION['user']['nome']);
+                fclose($f);
+        }
+
         public function uploadFiles($idtarefa, $keyFile, $override=false, $idpasta){
 
                 
@@ -309,13 +317,21 @@ class Arquivo_model extends CI_Model {
 
 
         public function makeDownload($idtarefa,$idaluno){
-                $pathHash = $this->generateRespostaPath($idtarefa,$idaluno);
-                $this->db->select("nome");
-                #cria com o nome do aluno
-                $rw = $this->db->get_where("usuarios",["idusuario"=>$idaluno])->row_array();
-                $destination = str_replace("\\","/",sys_get_temp_dir())."/{$rw['nome']}.zip";
-                #retorna o endereco do zip
-                return zip($pathHash, $destination);
+                if ($idaluno == null){
+                        $path = "./uploads/$idtarefa";
+                        $destination = str_replace("\\","/",sys_get_temp_dir())."/tarefa-$idtarefa.zip";
+                        #retorna o endereco do zip
+                        return zip($path, $destination);
+                } else {
+                        $pathHash = $this->generateRespostaPath($idtarefa,$idaluno);
+                        $this->db->select("nome");
+                        #cria com o nome do aluno
+                        $rw = $this->db->get_where("usuarios",["idusuario"=>$idaluno])->row_array();
+                
+                        $destination = str_replace("\\","/",sys_get_temp_dir())."/{$rw['nome']}.zip";
+                        #retorna o endereco do zip
+                        return zip($pathHash, $destination);
+                }
         }
 
 

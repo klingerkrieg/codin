@@ -36,8 +36,15 @@ class Tarefa_model extends CI_Model {
         }
 
         public function get($idtarefa){
-                $this->db->select('idtarefa, idturma, nota_max, titulo, texto, entrega, idprofessor ');
-                $arr = $this->db->get_where($this->table,['idtarefa'=>$idtarefa])->row_array();
+                #$this->db->select('idtarefa, idturma, nota_max, titulo, texto, entrega, idprofessor ');
+                #$arr = $this->db->get_where($this->table,['idtarefa'=>$idtarefa])->row_array();
+                $sql = "select idtarefa, titulo, texto, entrega, idprofessor, idturma, nota_max, "
+                        ." (select count(*) from aluno_turma where idturma = tarefas.idturma) as qtd_alunos, "
+                        ." (select count(distinct idusuario) from arquivos where idtarefa = tarefas.idtarefa and do_professor = 0) as qtd_concluidos "
+                        ." from tarefas "
+                        ."  where idtarefa = $idtarefa ";
+                $arr = $this->db->query($sql)->row_array();
+                
                 $parts = explode(' ',$arr['entrega']);
                 if ($parts[0] != ""){
                         $arr['data'] = date_mysql_to_br($parts[0]);
